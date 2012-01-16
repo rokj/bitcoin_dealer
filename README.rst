@@ -12,7 +12,11 @@ Installation
 ------------
 * Register to MtGox - https://mtgox.com/
 * Install Django - https://www.djangoproject.com/
-* Add following variables in settings.py:
+* Run: git clone git@github.com:rokj/bitcoin_dealer.git
+* Install and configure database you will use.
+* Change database settings in settings.py.
+* Run: python manage.py syncdb
+* Change following variables in settings.py:
  - mtgox_username = 'your mtgox user'
  - mtgox_password = 'your mtgox pass'
  - mtgox_key = 'you get this in mtgox admin page'
