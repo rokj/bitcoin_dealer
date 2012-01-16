@@ -12,14 +12,14 @@ Installation
 ------------
 * Register to MtGox - https://mtgox.com/
 * Install Django - https://www.djangoproject.com/
-* Add following variables in settings.py::
- mtgox_username = 'your mtgox user'
- mtgox_password = 'your mtgox pass'
- mtgox_key = 'you get this in mtgox admin page'
- mtgox_secret = 'you get this also in mtgox admin page'
- check_interval = 7
- bd_debug = True
- "exchange" into INSTALLED_APPS
+* Add following variables in settings.py:
+ - mtgox_username = 'your mtgox user'
+ - mtgox_password = 'your mtgox pass'
+ - mtgox_key = 'you get this in mtgox admin page'
+ - mtgox_secret = 'you get this also in mtgox admin page'
+ - check_interval = 7
+ - bd_debug = True
+ - "exchange" into INSTALLED_APPS
 * Set DEBUG to True in settings.py and set TEMPLATE_DEBUG to DEBUG.
 * Start trading script with in root bitcoin dealer folder like:
   python -u scripts/dealing.py
@@ -31,9 +31,9 @@ Troubleshooting
 ---------------
 If paths for running script cannot be found and you get errors, set following
 variables:
-export DJANGO_SETTINGS_MODULE=bitcoin_dealer.settings (bitcoin_dealer is the
+ export DJANGO_SETTINGS_MODULE=bitcoin_dealer.settings (bitcoin_dealer is the
 name of the folder you have clonde this project)
-export PYTHONPATH=/your_path_to_one_path_less_than_bitcoin_dealer/
+ export PYTHONPATH=/your_path_to_one_path_less_than_bitcoin_dealer/
 (if you have bitcoin_dealer in /programs/bitcoin_dealer/ then you should
 export PYTHONPATH=/programs/
 
