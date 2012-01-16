@@ -31,8 +31,10 @@ Troubleshooting
 ---------------
 If paths for running script cannot be found and you get errors, set following
 variables:
- export DJANGO_SETTINGS_MODULE=bitcoin_dealer.settings (bitcoin_dealer is the name of the folder you have clonde this project)
- export PYTHONPATH=/your_path_to_one_path_less_than_bitcoin_dealer/ (if you have bitcoin_dealer in /programs/bitcoin_dealer/ then you should export PYTHONPATH=/programs/
+ export DJANGO_SETTINGS_MODULE=bitcoin_dealer.settings
+(bitcoin_dealer is the name of the folder you have clonde this project)
+ export PYTHONPATH=/your_path_to_one_path_less_than_bitcoin_dealer/ 
+(if you have bitcoin_dealer in /programs/bitcoin_dealer/ then you should export PYTHONPATH=/programs/
 
 WARNING
 -------
