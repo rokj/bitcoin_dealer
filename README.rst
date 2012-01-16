@@ -29,7 +29,7 @@ Installation
   python -u scripts/dealing.py
 * Start webserver in root bicoin dealer folder like:
   python manage.py runserver 8000
-* Goto http://127.0.0.1:8000/admin/ and place orders.
+* Goto http://127.0.0.1:8000/admin/ and trade.
 
 Troubleshooting
 ---------------
@@ -41,10 +41,13 @@ variables:
 
 bitcoin_dealer is the name of the folder you have cloned this project. If you have bitcoin_dealer in **/programs/bitcoin_dealer/** then you should export **PYTHONPATH=/programs/**.
 
+Info
+----
+Right now you should not change status of trades, since it is not fully implemented (but it will have effect on other related trades if you change status from **selling** to **sold** for example). Just leave it as it is. If you would not like to execute trade, just uncheck active checkbox, but be careful to deactivate related first.
+
 WARNING
 -------
-Watch out, settings.py should be accessible only by you, your account and your 
-permissions.
+Watch out, settings.py should be accessible only by you, your account and your permissions.
 
 You find it useful or want new feature? 
 ----------------------------------------
