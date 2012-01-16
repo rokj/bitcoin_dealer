@@ -1,9 +1,7 @@
 Bitcoin dealer
 ==============
 
-Bitcoin dealer is simple Django script for trading bitcoins currently only
-on MtGox exchange. Now only API version 0 is supported, which will be deprecated on 1th
-of March.
+Bitcoin dealer is simple Django script for trading bitcoins currently only on MtGox exchange. Currently only API version 0 is supported, which will be deprecated on 1th of March, but new API support should be available before that date. :)
 
 Script is most useful for those who do not have time to watch price of bitcoin all the time, have a PC running all the time and know how to write few "Hello worlds" with two if cases.
 
