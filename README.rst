@@ -25,13 +25,14 @@ Installation
   python -u scripts/dealing.py
 * Start webserver in root bicoin dealer folder like:
   python manage.py runserver 8000
-* Goto http://127.0.0.1:8000/admin/ and place trades.
+* Goto http://127.0.0.1:8000/admin/ and place orders.
 
 Troubleshooting
 ---------------
 If paths for running script cannot be found and you get errors, set following
 variables:
  export DJANGO_SETTINGS_MODULE=bitcoin_dealer.settings
+
  export PYTHONPATH=/your_path_to_one_path_less_than_bitcoin_dealer/ 
 
 bitcoin_dealer is the name of the folder you have cloned this project. If you have bitcoin_dealer in **/programs/bitcoin_dealer/** then you should export **PYTHONPATH=/programs/**.
