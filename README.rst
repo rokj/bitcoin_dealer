@@ -46,6 +46,9 @@ WARNING
 -------
 Watch out, settings.py should be accessible only to you, your account and with your permissions.
 
+Script works correctly only if you have enough funds (bitcoins, $, €, ...) on your accounts.
+
+
 You like this little script, you find it useful or want new feature? 
 ----------------------------------------
 You can donate a bitcoin or few on:
