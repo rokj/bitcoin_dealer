@@ -48,7 +48,7 @@ class Trade(models.Model):
     buy_or_sell = models.BooleanField(_('Buy or sell?'), help_text=_('TRUE == buy; FALSE == sell'), default=False, null=False, blank=False)
     watch_price = models.DecimalField(_('Price to watch'), max_digits=10, decimal_places=5, null=False, blank=False)
     price = models.DecimalField(_('Buy or sell at price'), max_digits=10, decimal_places=5, null=False, blank=False)
-    amount = models.DecimalField(_('Amount'), max_digits=10, decimal_places=5, null=False, blank=False)
+    amount = models.DecimalField(_('Amount'), max_digits=10, decimal_places=8, null=False, blank=False)
     exchange_order_id = models.PositiveIntegerField(_('Exchange order id'), null=True, blank=True)
     status = models.CharField(_('Status of trade'), help_text=_('status of trade'), max_length=30, null=False, blank=False, choices=TRADE_STATUS, default='waiting')
     active = models.BooleanField(_('Active or not'), help_text=_('active == TRUE, not active == FALSE'), default=False, null=False, blank=False)
