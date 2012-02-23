@@ -49,9 +49,9 @@ class Trade(models.Model):
     watch_price = models.DecimalField(_('Price to watch'), max_digits=10, decimal_places=5, null=False, blank=False)
     price = models.DecimalField(_('Buy or sell at price'), max_digits=10, decimal_places=5, null=False, blank=False)
     amount = models.DecimalField(_('Amount'), max_digits=16, decimal_places=8, null=False, blank=False)
-    exchange_order_id = models.PositiveIntegerField(_('Exchange order id'), null=True, blank=True)
     status = models.CharField(_('Status of trade'), help_text=_('status of trade'), max_length=30, null=False, blank=False, choices=TRADE_STATUS, default='waiting')
     active = models.BooleanField(_('Active or not'), help_text=_('active == TRUE, not active == FALSE'), default=False, null=False, blank=False)
+    exchange_oid = models.CharField(_('Exchanges order ID'), help_text=_('Some exchanges returned id of a trade or something (we have it in format of http://en.wikipedia.org/wiki/UUID)'), max_length=36, null=True, blank=True, db_index=True) 
     related = models.ForeignKey('self', help_text=_('Only if related order was successfully executed, only then this order will be executed also'), null=True, blank=True)
 
     datetime_created = models.DateTimeField(auto_now=False, auto_now_add=True, null=False, blank=False)
