@@ -42,7 +42,7 @@ Info
 ----
 Right now you should not change status of trades, since API v1 still does not support that (but it will have effect on other related trades if you change status from **selling** to **sold** for example). Just leave it as it is. If you would cancel trade, go to your MtGox account and cancel trades/orders; but be careful to deactivate/cancel related first.
 
-Check https://en.bitcoin.it/wiki/MtGox/API what different APIs support.
+Check https://en.bitcoin.it/wiki/MtGox/API what different verions of API support.
 
 WARNING
 -------
