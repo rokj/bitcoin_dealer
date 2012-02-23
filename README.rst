@@ -1,7 +1,7 @@
 Bitcoin dealer
 ==============
 
-Bitcoin dealer is simple Django script for trading bitcoins currently only on MtGox exchange. Currently only API version 0 is supported, which will be deprecated on 1th of March, but new API support should be available before that date. :)
+Bitcoin dealer is simple Django script for trading bitcoins currently only on MtGox exchange. API version 1 is supported and only currencies dollar and euro (will implement others if someone requests for); for API version 0 you should see previous commits.
 
 Script is most useful for those who do not have time to watch price of bitcoin all the time, have a PC running all the time and know how to write few "Hello worlds" with two if cases.
 
@@ -40,13 +40,15 @@ bitcoin_dealer is the name of the folder you have cloned this project. If you ha
 
 Info
 ----
-Right now you should not change status of trades, since it is not fully implemented (but it will have effect on other related trades if you change status from **selling** to **sold** for example). Just leave it as it is. If you would cancel trade, just uncheck active checkbox, but be careful to deactivate related first.
+Right now you should not change status of trades, since API v1 still does not support that (but it will have effect on other related trades if you change status from **selling** to **sold** for example). Just leave it as it is. If you would cancel trade, go to your MtGox account and cancel trades/orders; but be careful to deactivate/cancel related first.
+
+Check https://en.bitcoin.it/wiki/MtGox/API what different APIs support.
 
 WARNING
 -------
 Watch out, settings.py should be accessible only to you, your account and with your permissions.
 
-Script works correctly only if you have enough funds (bitcoins, $, €, ...) on your MtGox account.
+Script works correctly only if you have enough funds (bitcoins, $, €, ...) on your MtGox account. There is no checking if you do not have enough coins or money on your account.
 
 
 You like this little script, you find it useful or want new feature? 
