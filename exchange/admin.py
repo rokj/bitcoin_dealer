@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.forms import ModelForm
 from django.forms.widgets import Select
-from models import Trade, TradeLog
+from models import Trade, TradeLog, Currency, Exchange
 
 class TradeAdminForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -12,8 +12,8 @@ class TradeAdminForm(ModelForm):
 
 class TradeAdmin(admin.ModelAdmin):
     exclude = ('user', 'created_by', 'updated_by', 'datetime_deleted', )
-    list_display = ('pk', '_buy_or_sell', '_watch_price', 'price', 'amount', 'status', 'related', 'active', 'datetime_updated', )
-    fields = ('watch_price', 'lp_higher', 'buy_or_sell', 'price', 'amount', 'related', 'exchange_oid', 'status', 'active',)
+    list_display = ('pk', '_buy_or_sell', '_watch_price', 'price', 'amount', 'currency', 'exchange', 'status', 'related', 'active', 'datetime_updated', )
+    fields = ('watch_price', 'lp_higher', 'buy_or_sell', 'price', 'currency', 'amount', 'related', 'exchange', 'exchange_oid', 'status', 'active',)
     ordering = ('-id',)
     readonly_fields = ( 'exchange_oid', )
     form = TradeAdminForm
@@ -65,3 +65,5 @@ class TradeLogAdmin(admin.ModelAdmin):
 
 admin.site.register(Trade, TradeAdmin)
 admin.site.register(TradeLog, TradeLogAdmin)
+admin.site.register(Exchange)
+admin.site.register(Currency)

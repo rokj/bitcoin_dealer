@@ -45,10 +45,7 @@ class Currency(SkeletonU):
     sign = models.CharField(_('Currency sign'), max_length=3, null=True, blank=True)
 
     def __unicode__(self):
-        if self.sign and self.sign != "":
-            return u'%s - %s (%s)' % (self.abbreviation, self.name, self.sign)
-        else:
-            return u'%s - %s' % (self.abbreviation, self.name)
+        return u'%s' % (self.abbreviation)
 
 class Exchange(SkeletonU):
     name = models.CharField(_('Exchange name'), max_length=40, null=False, blank=False, unique=True, db_index=True)
@@ -66,8 +63,6 @@ class Trade(SkeletonU):
     """
 
     user = models.ForeignKey(User, related_name='(app_label)s_%(class)s_user', null=False, blank=False)
-    exchange = models.ForeignKey(Exchange, related_name='(app_label)s_%(class)s_exchange', null=False, blank=False) 
-    currency = models.ForeignKey(Currency, related_name='(app_label)s_%(class)s_currency', null=False, blank=False)
     lp_higher = models.BooleanField(_('Is last price price higher/lower?'), help_text=_('TRUE == if last price is higher or equal to watch price; FALSE == if last price is lower or equal to watch price'), default=False, null=False, blank=False)
     buy_or_sell = models.BooleanField(_('Buy or sell?'), help_text=_('TRUE == buy; FALSE == sell'), default=False, null=False, blank=False)
     watch_price = models.DecimalField(_('Price to watch'), max_digits=10, decimal_places=5, null=False, blank=False)
@@ -77,6 +72,8 @@ class Trade(SkeletonU):
     active = models.BooleanField(_('Active or not'), help_text=_('active == TRUE, not active == FALSE'), default=False, null=False, blank=False)
     exchange_oid = models.CharField(_('Exchanges order ID'), help_text=_('Some exchanges returned id of a trade or something (we have it in format of http://en.wikipedia.org/wiki/UUID)'), max_length=36, null=True, blank=True, db_index=True) 
     related = models.ForeignKey('self', help_text=_('Only if related order was successfully executed, only then this order will be executed also'), null=True, blank=True)
+    exchange = models.ForeignKey(Exchange, related_name='(app_label)s_%(class)s_exchange', null=False, blank=False) 
+    currency = models.ForeignKey(Currency, related_name='(app_label)s_%(class)s_currency', null=False, blank=False)
 
     def __unicode__(self):
         return u'%s - %s %s %s' % (self.pk, self.watch_price, self.price, self.amount)
