@@ -32,9 +32,9 @@ class MtGox1():
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
-        self._change_currency_urls()
+        self._change_currency_url()
 
-    def _change_currency_urls(self):
+    def _change_currency_url(self):
         self.ticker_url["url"] = self.ticker_url["url"].replace('BTCUSD', 'BTC' + self.currency)
 
     def _create_nonce(self):

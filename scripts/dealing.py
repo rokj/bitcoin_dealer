@@ -34,7 +34,7 @@ def trade(trades, last_price):
                         trade.exchange_oid = response
                         trade.save()
 
-                        trade_log = TradeLog(trade=trade, log="buying", log_desc="Buying %s." % (trade.pk))
+                        trade_log = TradeLog(created_by=trade.user, trade=trade, log="buying", log_desc="Buying %s." % (trade.pk))
                         trade_log.save()
 
                         if settings.bd_debug == True:
@@ -51,7 +51,7 @@ def trade(trades, last_price):
                         trade.exchange_oid = response
                         trade.save()
 
-                        trade_log = TradeLog(trade=trade, log="buying", log_desc="Buying %s." % (trade.pk))
+                        trade_log = TradeLog(created_by=trade.user, trade=trade, log="buying", log_desc="Buying %s." % (trade.pk))
                         trade_log.save()
 
                         if settings.bd_debug == True:
@@ -69,7 +69,7 @@ def trade(trades, last_price):
                             trade.exchange_oid = response
                             trade.save()
 
-                            trade_log = TradeLog(trade=trade, log="buying", log_desc="Buying %s (related %s sold)." % (trade.pk, trade.related.pk))
+                            trade_log = TradeLog(created_by=trade.user, trade=trade, log="buying", log_desc="Buying %s (related %s sold)." % (trade.pk, trade.related.pk))
                             trade_log.save()
 
                             if settings.bd_debug == True:
@@ -87,7 +87,7 @@ def trade(trades, last_price):
                             trade.exchange_oid = response
                             trade.save()
 
-                            trade_log = TradeLog(trade=trade, log="buying", log_desc="Buying %s (related %s sold)." % (trade.pk, trade.related.pk))
+                            trade_log = TradeLog(created_by=trade.user, trade=trade, log="buying", log_desc="Buying %s (related %s sold)." % (trade.pk, trade.related.pk))
                             trade_log.save()
 
                             if settings.bd_debug == True:
@@ -104,7 +104,7 @@ def trade(trades, last_price):
                         trade.exchange_oid = response
                         trade.save()
 
-                        trade_log = TradeLog(trade=trade, log="selling", log_desc="Selling %s." % (trade.pk))
+                        trade_log = TradeLog(created_by=trade.user, trade=trade, log="selling", log_desc="Selling %s." % (trade.pk))
                         trade_log.save()
 
                         if settings.bd_debug == True:
@@ -121,7 +121,7 @@ def trade(trades, last_price):
                         trade.exchange_oid = response
                         trade.save()
 
-                        trade_log = TradeLog(trade=trade, log="selling", log_desc="Selling %s." % (trade.pk))
+                        trade_log = TradeLog(created_by=trade.user, trade=trade, log="selling", log_desc="Selling %s." % (trade.pk))
                         trade_log.save()
 
                         if settings.bd_debug == True:
@@ -139,7 +139,7 @@ def trade(trades, last_price):
                             trade.exchange_oid = response
                             trade.save()
 
-                            trade_log = TradeLog(trade=trade, log="selling", log_desc="Selling %s (related %s bought)." % (trade.pk, trade.related.pk))
+                            trade_log = TradeLog(created_by=trade.user, trade=trade, log="selling", log_desc="Selling %s (related %s bought)." % (trade.pk, trade.related.pk))
                             trade_log.save()
 
                             if settings.bd_debug == True:
@@ -157,7 +157,7 @@ def trade(trades, last_price):
                             trade.exchange_oid = response
                             trade.save()
 
-                            trade_log = TradeLog(trade=trade, log="selling", log_desc="Selling %s (related %s bought)." % (trade.pk, trade.related.pk))
+                            trade_log = TradeLog(created_by=trade.user, trade=trade, log="selling", log_desc="Selling %s (related %s bought)." % (trade.pk, trade.related.pk))
                             trade_log.save()
 
                             if settings.bd_debug == True:
@@ -184,7 +184,7 @@ def check_status(trades, orders):
                 trade.status = "not enough funds"
                 trade.save()
 
-                trade_log = TradeLog(trade=trade, log="not enough funds", log_desc="Not enough funds for trade %s." % (trade.pk))
+                trade_log = TradeLog(created_by=trade.user, trade=trade, log="not enough funds", log_desc="Not enough funds for trade %s." % (trade.pk))
                 trade_log.save()
                 if (settings.bd_debug == True):
 					console_log("not enoguh funds for selling...")
@@ -192,7 +192,7 @@ def check_status(trades, orders):
                 trade.status = "not enough funds"
                 trade.save()
 
-                trade_log = TradeLog(trade=trade, log="not enough funds", log_desc="Not enough funds for trade %s." % (trade.pk))
+                trade_log = TradeLog(created_by=trade.user, trade=trade, log="not enough funds", log_desc="Not enough funds for trade %s." % (trade.pk))
                 trade_log.save()
                 if (settings.bd_debug == True):
 					console_log("not enoguh funds for buying...")
@@ -203,7 +203,7 @@ def check_status(trades, orders):
                 trade.status = "sold"
                 trade.save()
 
-                trade_log = TradeLog(trade=trade, log="sold", log_desc="Sold trade %s." % (trade.pk))
+                trade_log = TradeLog(created_by=trade.user, trade=trade, log="sold", log_desc="Sold trade %s." % (trade.pk))
                 trade_log.save()
                 if (settings.bd_debug == True):
 				    console_log("sold %s bitcoins for %s %s" % (trade.amount, trade.price, settings.mtgox_currency))
@@ -211,7 +211,7 @@ def check_status(trades, orders):
                 trade.status = "bought"
                 trade.save()
 
-                trade_log = TradeLog(trade=trade, log="bought", log_desc="Bought trade %s." % (trade.pk))
+                trade_log = TradeLog(created_by=trade.user, trade=trade, log="bought", log_desc="Bought trade %s." % (trade.pk))
                 trade_log.save()
                 if (settings.bd_debug == True):
 					console_log("bought %s bitcoins for %s %s" % (trade.amount, trade.price, settings.mtgox_currency))
