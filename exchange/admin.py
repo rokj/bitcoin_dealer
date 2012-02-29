@@ -4,6 +4,58 @@ from django.forms import ModelForm
 from django.forms.widgets import Select
 from models import Trade, TradeLog, Currency, Exchange
 
+class ExchangeAdmin(admin.ModelAdmin):
+    exclude = ('user', 'created_by', 'updated_by', 'datetime_deleted', )
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.created_by = request.user
+        else:
+            obj.updated_by = request.user
+
+        obj.save()
+
+    # Kudos to http://www.b-list.org/weblog/2008/dec/24/admin/
+    def has_change_permission(self, request, obj=None):
+        has_class_permission = super(ExchangeAdmin, self).has_change_permission(request, obj)
+        if not has_class_permission:
+            return False
+        if obj is not None and not request.user.is_superuser and request.user.id != obj.created_by.id:
+            return False
+        return True
+
+    # Kudos to http://www.b-list.org/weblog/2008/dec/24/admin/
+    def queryset(self, request):
+        if request.user.is_superuser:
+            return Trade.objects.all()
+        return Exchange.objects.filter(created_by = request.user)
+
+class CurrencyAdmin(admin.ModelAdmin):
+    exclude = ('user', 'created_by', 'updated_by', 'datetime_deleted', )
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.created_by = request.user
+        else:
+            obj.updated_by = request.user
+
+        obj.save()
+
+    # Kudos to http://www.b-list.org/weblog/2008/dec/24/admin/
+    def has_change_permission(self, request, obj=None):
+        has_class_permission = super(CurrencyAdmin, self).has_change_permission(request, obj)
+        if not has_class_permission:
+            return False
+        if obj is not None and not request.user.is_superuser and request.user.id != obj.created_by.id:
+            return False
+        return True
+
+    # Kudos to http://www.b-list.org/weblog/2008/dec/24/admin/
+    def queryset(self, request):
+        if request.user.is_superuser:
+            return Trade.objects.all()
+        return Currency.objects.filter(created_by = request.user)
+
 class TradeAdminForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TradeAdminForm, self).__init__(*args, **kwargs)
@@ -50,7 +102,7 @@ class TradeAdmin(admin.ModelAdmin):
         has_class_permission = super(TradeAdmin, self).has_change_permission(request, obj)
         if not has_class_permission:
             return False
-        if obj is not None and not request.user.is_superuser and request.user.id != obj.author.id:
+        if obj is not None and not request.user.is_superuser and request.user.id != obj.created_by.id:
             return False
         return True
 
@@ -58,12 +110,12 @@ class TradeAdmin(admin.ModelAdmin):
     def queryset(self, request):
         if request.user.is_superuser:
             return Trade.objects.all()
-        return Trade.objects.filter(user = request.user)
+        return Trade.objects.filter(created_by = request.user)
 
 class TradeLogAdmin(admin.ModelAdmin):
     list_display = ('pk', 'datetime', 'trade', 'log', 'log_desc',)
 
 admin.site.register(Trade, TradeAdmin)
 admin.site.register(TradeLog, TradeLogAdmin)
-admin.site.register(Exchange)
-admin.site.register(Currency)
+admin.site.register(Exchange, ExchangeAdmin)
+admin.site.register(Currency, CurrencyAdmin)
