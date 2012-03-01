@@ -2,6 +2,9 @@ import sys, os, urllib, urllib2, time, json, hmac, hashlib, base64
 
 class MtGox():
     """
+    DEPRECATED will be. This is implementation for MtGox API version 0 which we
+    do not use anymore.
+
     See:
     https://mtgox.com/support/tradeAPI
     https://en.bitcoin.it/wiki/MtGox/API#Authentication

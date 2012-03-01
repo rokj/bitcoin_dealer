@@ -5,9 +5,13 @@ from django.forms.widgets import Select
 from models import Trade, TradeLog, Currency, Exchange
 
 class ExchangeAdmin(admin.ModelAdmin):
-    exclude = ('user', 'created_by', 'updated_by', 'datetime_deleted', )
+    exclude = ('created_by', 'updated_by', 'datetime_deleted', )
+    readonly_fields = ( 'name', )
 
     def save_model(self, request, obj, form, change):
+        if obj.active == False:
+            my_trades = Trade.objects.filter(active=True)
+
         if not change:
             obj.created_by = request.user
         else:
@@ -27,11 +31,11 @@ class ExchangeAdmin(admin.ModelAdmin):
     # Kudos to http://www.b-list.org/weblog/2008/dec/24/admin/
     def queryset(self, request):
         if request.user.is_superuser:
-            return Trade.objects.all()
+            return Exchange.objects.all()
         return Exchange.objects.filter(created_by = request.user)
 
 class CurrencyAdmin(admin.ModelAdmin):
-    exclude = ('user', 'created_by', 'updated_by', 'datetime_deleted', )
+    exclude = ('created_by', 'updated_by', 'datetime_deleted', )
 
     def save_model(self, request, obj, form, change):
         if not change:
@@ -53,7 +57,7 @@ class CurrencyAdmin(admin.ModelAdmin):
     # Kudos to http://www.b-list.org/weblog/2008/dec/24/admin/
     def queryset(self, request):
         if request.user.is_superuser:
-            return Trade.objects.all()
+            return Currency.objects.all()
         return Currency.objects.filter(created_by = request.user)
 
 class TradeAdminForm(ModelForm):

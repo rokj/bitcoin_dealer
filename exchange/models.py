@@ -52,9 +52,19 @@ class Exchange(SkeletonU):
     description = models.TextField(_('Description'), null=True, blank=True)
     url = models.URLField(_('URL of change'), max_length=255, blank=True, null=True, verify_exists=False)
     currencies = models.ManyToManyField(Currency, null=True, blank=True) # for future use
+    active = models.BooleanField(_('Active or not'), help_text=_('If active is set to false on exchange, then all trades for this exchange will be deactivated and cancelled (if exchange does support this action).'), default=False, null=False, blank=False)
 
     def __unicode__(self):
         return u"%s" % (self.name)
+
+"""
+For future
+class UserExchangeCurrency(SkeletonU):
+    user = models.ForeignKey(User, related_name='(app_label)s_%(class)s_user', null=False, blank=False)
+    exchange = models.ForeignKey(Exchange, related_name='(app_label)s_%(class)s_user', null=False, blank=False)
+    currency = models.ForeignKey(Currency, related_name='(app_label)s_%(class)s_user', null=False, blank=False)
+    active = models.BooleanField(_('Active or not'), help_text=_('If active is set to false on exchange, then all trades for this exchange will be deactivated and cancelled (if exchange does support this action).'), default=False, null=False, blank=False)
+"""
 
 class Trade(SkeletonU):
     """

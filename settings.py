@@ -120,6 +120,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     #'django.contrib.admindocs',
     'exchange',
+    'common'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -152,10 +153,14 @@ CACHES = {
     }
 }
 
-mtgox_username = ''
-mtgox_password = ''
-mtgox_key = ''
-mtgox_secret = ''
-mtgox_currency = 'USD'
-check_interval = 7
+EXCHANGES = {
+    'mtgox': {
+        'classname': 'MtGox1', # DO NOT CHANGE THIS
+        # exchange specific (you can set everything below to your needs)
+        'key': '',
+        'secret': '',
+    },
+}
+
+check_interval = 2
 bd_debug = True

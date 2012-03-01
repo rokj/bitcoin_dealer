@@ -8,25 +8,31 @@ sys.path.append(os.path.abspath('..'))
 sys.path.append(os.path.abspath('../bitcoin_dealer'))
 
 from bitcoin_dealer.exchange.exchange.mtgox1 import MtGox1
-from bitcoin_dealer.exchange.models import Trade, TradeLog
+from bitcoin_dealer.exchange.models import Trade, TradeLog, Exchange
+from bitcoin_dealer.exchange.exchange_abstract import ExchangeAbstract
 import bitcoin_dealer.settings as settings
 
 def console_log(message):
     now = datetime.datetime.now()
     print "%s - %s" % (now.strftime("%Y-%m-%d %H:%M:%S"), message)
 
-def trade(trades, last_price):
-    if last_price is None: return
-
-    last_price = Decimal(last_price)
-
+def trade(trades):
     for trade in trades:
+        if trade.exchange.name in exchanges:
+            last_price = exchanges[trade.exchange.name].get_price(trade.currency.name)
+        else:
+            continue
+        
+        if last_price is None: continue
+
+        last_price = Decimal(last_price)
+
         try:
             watch_price = Decimal(trade.watch_price)
             # we are BUYING, when last price is higher or equal to watch price (lp_higher == True) and there is no related "sell" order
             if trade.active == True and trade.lp_higher == True and trade.buy_or_sell == True and trade.related is None:
                 if last_price >= watch_price:
-                    response = mtgox.buy(trade.price, trade.amount)
+                    response = exchanges[trade.exchange.name].buy(trade.price, trade.amount)
 
                     if response and response is not None:
                         trade.active = False
@@ -43,7 +49,7 @@ def trade(trades, last_price):
             # we are BUYING, when last price is lower or equal to watch price (lp_higher == False) and there is no related "sell" order
             elif trade.active == True and trade.lp_higher == False and trade.buy_or_sell == True and trade.related is None:
                 if last_price <= watch_price:
-                    response = mtgox.buy(trade.price, trade.amount)
+                    response = exchanges[trade.exchange.name].buy(trade.price, trade.amount)
 
                     if response and response is not None:
                         trade.active = False
@@ -61,7 +67,7 @@ def trade(trades, last_price):
             elif trade.active == True and trade.lp_higher == True and trade.buy_or_sell == True and trade.related is not None:
                 if trade.related.status == "sold" and trade.status == "waiting":
                     if last_price >= watch_price:
-                        response = mtgox.buy(trade.price, trade.amount)
+                        response = exchanges[trade.exchange.name].buy(pritrade.price, trade.amount)
 
                         if response and response is not None:
                             trade.active = False
@@ -79,7 +85,7 @@ def trade(trades, last_price):
             elif trade.active == True and trade.lp_higher == False and trade.buy_or_sell == True and trade.related is not None:
                 if trade.related.status == "sold" and trade.status == "waiting":
                     if last_price <= watch_price:
-                        response = mtgox.buy(trade.price, trade.amount)
+                        response = exchanges[trade.exchange.name].buy(trade.price, trade.amount)
 
                         if response and response is not None:
                             trade.active = False
@@ -96,7 +102,7 @@ def trade(trades, last_price):
             # we are SELLING, when last price is higher or equal to watch price (lp_higher == True) and there is no related "buy" order
             elif trade.active == True and trade.lp_higher == True and trade.buy_or_sell == False and trade.related is None:
                 if last_price >= watch_price:
-                    response = mtgox.sell(trade.price, trade.amount)
+                    response = exchanges[trade.exchange.name].sell(trade.price, trade.amount)
 
                     if response and response is not None:
                         trade.active = False
@@ -113,7 +119,7 @@ def trade(trades, last_price):
             # we are SELLING, when last price is lower or equal to watch price (lp_higher == False) and there is no related "buy" order
             elif trade.active == True and trade.lp_higher == False and trade.buy_or_sell == False and trade.related is None:
                 if last_price <= watch_price:
-                    response = mtgox.sell(trade.price, trade.amount)
+                    response = exchanges[trade.exchange.name].sell(trade.price, trade.amount)
 
                     if response and response is not None:
                         trade.active = False
@@ -131,7 +137,7 @@ def trade(trades, last_price):
             elif trade.active == True and trade.lp_higher == True and trade.buy_or_sell == False and trade.related is not None:
                 if trade.related.status == "bought" and trade.status == "waiting":
                     if last_price >= watch_price:
-                        response = mtgox.sell(trade.price, trade.amount)
+                        response = exchanges[trade.exchange.name].sell(trade.price, trade.amount)
 
                         if response and response is not None:
                             trade.active = False
@@ -149,7 +155,7 @@ def trade(trades, last_price):
             elif trade.active == True and trade.lp_higher == False and trade.buy_or_sell == False and trade.related is not None:
                 if trade.related.status == "bought" and trade.status == "waiting":
                     if last_price <= watch_price:
-                        response = mtgox.sell(trade.price, trade.amount)
+                        response = exchanges[trade.exchange.name].sell(trade.price, trade.amount)
 
                         if response and response is not None:
                             trade.active = False
@@ -216,18 +222,30 @@ def check_status(trades, orders):
                 if (settings.bd_debug == True):
 					console_log("bought %s bitcoins for %s %s" % (trade.amount, trade.price, settings.mtgox_currency))
 
-mtgox = MtGox1({"key": settings.mtgox_key, "secret": settings.mtgox_secret, "currency": settings.mtgox_currency})
-
 while True:
     time.sleep(settings.check_interval)
     try:
-        my_trades = Trade.objects.filter(active=True)
-        price = mtgox.get_price()
-        trade(my_trades, price)
+        exchanges = {}
+        active_exchanges = Exchange.objects.filter(active=True)
+        for exchange in active_exchanges:
+            if exchange.name in settings.EXCHANGES:
+                exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]['classname'])(settings.EXCHANGES[exchange.name]) # with (settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
+
+        my_trades = Trade.objects.filter(exchange__in=active_exchanges, active=True)
+        # trade(my_trades)
 
         # we check for statuses of our orders
         all_my_trades = Trade.objects.all()
-        my_open_orders = mtgox.get_orders()
+        
+        print exchanges["mtgox"].get_price("EUR")
+        my_open_orders = []
+        for exchange, exchange_data in exchanges.iteritems():
+            open_orders = exchanges[exchange].get_orders()
+            if open_orders is not None:
+                # when we will implement another exchange, we will need following line instead of the second following line
+                # my_open_orders.append(open_orders)
+                my_open_orders = open_orders
+
         if all_my_trades is not None and len(all_my_trades) > 0 and my_open_orders is not None:
             check_status(all_my_trades, my_open_orders)
             if (settings.bd_debug == True):

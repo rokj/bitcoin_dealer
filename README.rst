@@ -1,11 +1,11 @@
 Bitcoin dealer
 ==============
 
-Bitcoin dealer is simple Django script for trading bitcoins currently only on MtGox exchange. 
+Bitcoin dealer is simple Django program for trading bitcoins currently only on MtGox exchange. 
 
 MtGox API version 1 (https://en.bitcoin.it/wiki/MtGox/API) is supported and currencies dollar and euro (will implement others if someone requests for); for API version 0, you should see previous commits.
 
-Script is most useful for those who do not have time to watch price of bitcoin all the time, have a PC running all the time and know how to write few "Hello worlds" with two if cases.
+Program is most useful for those who do not have time to watch price of bitcoin all the time, have a PC running all the time and know how to write few "Hello worlds" with two if cases.
 
 Installation
 ------------
@@ -50,10 +50,14 @@ WARNING
 -------
 Watch out, settings.py should be accessible only to you, your account and with your permissions.
 
-Script works correctly only if you have enough funds (bitcoins, $, €, ...) on your MtGox account. There is no checking if you do not have enough coins or money on your account.
+Program works correctly only if you have enough funds (bitcoins, $, €, ...) on your MtGox account. There is no checking if you do not have enough coins or money on your account.
 
 
-You like this little script, you find it useful or want new feature? 
+You like these few lines of code, you find it useful or want new feature? 
 ----------------------------------------
 You can donate a bitcoin or few on:
 1MC1BSkwD45gAuQ8mvXtD1RZWhNtxGV1ho
+
+Developers
+----------
+With little effort, support for other exchanges can be added also. Database "models" and program itself is "designed" with that in mind. However, script which is responsible for trading (scripts/dealing.py), by the time of this writing supports only MtGox.
