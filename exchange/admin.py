@@ -121,5 +121,5 @@ class TradeLogAdmin(admin.ModelAdmin):
 
 admin.site.register(Trade, TradeAdmin)
 admin.site.register(TradeLog, TradeLogAdmin)
-admin.site.register(Exchange, ExchangeAdmin)
-admin.site.register(Currency, CurrencyAdmin)
+# admin.site.register(Exchange, ExchangeAdmin)
+# admin.site.register(Currency, CurrencyAdmin)
