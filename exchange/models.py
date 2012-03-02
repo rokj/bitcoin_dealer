@@ -42,7 +42,7 @@ LOG = (
 class Currency(SkeletonU):
     name = models.CharField(_('Currency name'), max_length=30, null=False, blank=False, unique=True)
     abbreviation = models.CharField(_('Abbreviation'), max_length=5, null=False, blank=False, unique=True)
-    sign = models.CharField(_('Currency sign'), max_length=3, null=True, blank=True)
+    symbol = models.CharField(_('Currency symbol'), max_length=3, null=True, blank=True)
 
     def __unicode__(self):
         return u'%s' % (self.abbreviation)
