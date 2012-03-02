@@ -3,7 +3,7 @@ Bitcoin dealer
 
 Bitcoin dealer is simple Django program for trading bitcoins currently only on MtGox exchange. 
 
-MtGox API version 1 (https://en.bitcoin.it/wiki/MtGox/API) is supported and currencies dollar and euro (will implement others if someone requests for); for API version 0, you should see previous commits.
+MtGox API version 1 (https://en.bitcoin.it/wiki/MtGox/API) is supported for currencies dollar and euro (will implement others if there is interest for).
 
 Program is most useful for those who do not have time to watch price of bitcoin all the time, have a PC running all the time and know how to write few "Hello worlds" with two if cases.
 
@@ -15,14 +15,11 @@ Installation
 * Install and configure database you will use.
 * Change database settings in settings.py.
 * Run: python manage.py syncdb
-* Change following variables in settings.py:
- - mtgox_username = 'your mtgox user'
- - mtgox_password = 'your mtgox pass'
- - mtgox_key = 'you get this in mtgox admin page'
- - mtgox_secret = 'you get this also in mtgox admin page'
+* Change following variables in settings.py (under EXCHANGES):
+ - mtgox -> key = 'you get this in mtgox admin page'
+ - mtgox -> secret = 'you get this also in mtgox admin page'
  - check_interval = 7
  - bd_debug = True
- - "exchange" into INSTALLED_APPS
 * Set DEBUG to True in settings.py and set TEMPLATE_DEBUG to DEBUG.
 * Start trading script with in root bitcoin dealer folder like:
   python -u scripts/dealing.py
