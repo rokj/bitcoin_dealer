@@ -46,12 +46,16 @@ class MtGox1(ExchangeAbstract):
         return None
 
     def _to_int_price(self, price, currency):
-        if currency == "USD" or currency == "EUR":
-            price = Decimal(price)
+        ret_price = None
 
-            return int(price * 100000)
+        if currency == "USD" or currency == "EUR" or currency == "GBP" or currency == "PLN" or currency == "CAD":
+            ret_price = Decimal(price)
+            ret_price = int(price * 100000)
+        else currency == "JPY":
+            ret_price = Decimal(price)
+            ret_price = int(price * 1000)
 
-        return None
+        return ret_price
 
     def _to_int_amount(self, amount):
         amount = Decimal(amount)

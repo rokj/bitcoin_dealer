@@ -9,7 +9,12 @@ class ExchangeAbstract:
         """
         Retrieves orders for particular exchange.
 
+        This method is used for check_status function in scripts/dealing.py,
+        but right now, when only MtGox API version 1 is implemented, returned
+        data is not structured. I/you should do it, when implementing support
+        for other exchanges.
         """
+
         return None
 
     @abstractmethod
@@ -19,6 +24,7 @@ class ExchangeAbstract:
 
         Should return Decimal value of a price.
         """
+
         return None
 
     @abstractmethod
@@ -29,6 +35,8 @@ class ExchangeAbstract:
         Should return order ID if order was placed successfully.
         """
 
+        return None
+
     @abstractmethod
     def sell(self, price, amount, currency):
         """ 
@@ -36,3 +44,5 @@ class ExchangeAbstract:
 
         Should return order ID if order was placed successfully.
         """
+
+        return None
