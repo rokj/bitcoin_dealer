@@ -48,10 +48,10 @@ class MtGox1(ExchangeAbstract):
     def _to_int_price(self, price, currency):
         ret_price = None
 
-        if currency == "USD" or currency == "EUR" or currency == "GBP" or currency == "PLN" or currency == "CAD":
+        if currency == "USD" or currency == "EUR" or currency == "GBP" or currency == "PLN" or currency == "CAD" or currency == "AUD" or currency == "CHF" or currency == "CNY" or currency == "NZD" or currency == "RUB" or currency == "DKK" or currency == "HKD" or currency == "SGD" or currency == "THB":
             ret_price = Decimal(price)
             ret_price = int(price * 100000)
-        else currency == "JPY":
+        else currency == "JPY" or currency == "SEK":
             ret_price = Decimal(price)
             ret_price = int(price * 1000)
 
