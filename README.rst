@@ -15,7 +15,7 @@ Installation
 * Run: git clone git@github.com:rokj/bitcoin_dealer.git
 * Install and configure database you will use.
 * Change database settings in settings.py.
-* Run: python manage.py syncdb
+* Run: python manage.py syncdb This will create database schema, tables and load intial_data.json to database.
 * Change following variables in settings.py (under EXCHANGES):
  - mtgox -> key = 'you get this in mtgox admin page'
  - mtgox -> secret = 'you get this also in mtgox admin page'
@@ -50,6 +50,7 @@ Watch out, settings.py should be accessible only to you, your account and with y
 
 Program works correctly only if you have enough funds (bitcoins, $, €, ...) on your MtGox account. There is no checking if you do not have enough coins or money on your account.
 
+Every time you do "python manage.py syncdb" tables exchange_currency, exchange_exchange and exchange_exchange_currencies will be overwritten by data from initial_data.json.
 
 You like these few lines of code, you find it useful or want new feature? 
 ----------------------------------------
