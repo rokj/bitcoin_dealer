@@ -69,7 +69,7 @@ class TradeAdminForm(ModelForm):
 class TradeAdmin(admin.ModelAdmin):
     exclude = ('user', 'created_by', 'updated_by', 'datetime_deleted', )
     list_display = ('pk', '_buy_or_sell', '_watch_price', 'price', 'amount', 'currency', 'exchange', 'status', 'related', 'active', 'datetime_updated', )
-    fields = ('watch_price', 'lp_higher', 'buy_or_sell', 'price', 'currency', 'amount', 'related', 'exchange', 'exchange_oid', 'status', 'active',)
+    fields = ('watch_price', 'lp_higher', 'buy_or_sell', 'price', 'amount', 'currency', 'related', 'exchange', 'exchange_oid', 'status', 'active',)
     ordering = ('-id',)
     readonly_fields = ( 'exchange_oid', )
     form = TradeAdminForm

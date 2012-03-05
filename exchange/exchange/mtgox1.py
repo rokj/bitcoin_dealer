@@ -14,7 +14,7 @@ class MtGox1(ExchangeAbstract):
     ticker_url = { "method": "GET", "url": "https://mtgox.com/api/1/BTCUSD/public/ticker" }
     buy_url = { "method": "POST", "url": "https://mtgox.com/api/1/BTCUSD/private/order/add" }
     sell_url = { "method": "POST", "url": "https://mtgox.com/api/1/BTCUSD/private/order/add" }
-    open_orders_url = { "method": "GET", "url": "https://mtgox.com/api/1/generic/private/orders" }
+    open_orders_url = { "method": "POST", "url": "https://mtgox.com/api/1/generic/private/orders" }
 
     key = None
     secret = None
@@ -51,7 +51,7 @@ class MtGox1(ExchangeAbstract):
         if currency == "USD" or currency == "EUR" or currency == "GBP" or currency == "PLN" or currency == "CAD" or currency == "AUD" or currency == "CHF" or currency == "CNY" or currency == "NZD" or currency == "RUB" or currency == "DKK" or currency == "HKD" or currency == "SGD" or currency == "THB":
             ret_price = Decimal(price)
             ret_price = int(price * 100000)
-        else currency == "JPY" or currency == "SEK":
+        elif currency == "JPY" or currency == "SEK":
             ret_price = Decimal(price)
             ret_price = int(price * 1000)
 
@@ -71,8 +71,8 @@ class MtGox1(ExchangeAbstract):
 
         response = self._send_request(self.open_orders_url, params, headers)
 
-        if response and "result" in response and response["result"] == "success":
-            return response["return"]
+        if response and u"result" in response and response[u"result"] == u"success":
+            return response[u"return"]
 
         return None
 
@@ -83,10 +83,10 @@ class MtGox1(ExchangeAbstract):
         self.ticker_url["url"] = self._change_currency_url(self.ticker_url["url"], currency)
 
         response = self._send_request(self.ticker_url, {})
-        if response and "result" in response and response["result"] == "success" and "return" in response and "last_local" in response["return"]:
-            self.last_price[currency] = Decimal(response["return"]["last_local"]["value"])
+        if response and u"result" in response and response[u"result"] == u"success" and u"return" in response and u"last_local" in response[u"return"]:
+            self.last_price[currency] = Decimal(response[u"return"][u"last_local"][u"value"])
 
-            return Decimal(response["return"]["last_local"]["value"])
+            return Decimal(response[u"return"][u"last_local"][u"value"])
 
         return None
 
@@ -135,8 +135,8 @@ class MtGox1(ExchangeAbstract):
 
         response = self._send_request(self.buy_url, params, headers)
 
-        if response and "result" in response and response["result"] == "success":
-            return response["return"]
+        if response and u"result" in response and response[u"result"] == u"success":
+            return response[u"return"]
 
         return None
 
@@ -164,7 +164,7 @@ class MtGox1(ExchangeAbstract):
 
         response = self._send_request(self.sell_url, params, headers)
 
-        if response and "result" in response and response["result"] == "success":
-            return response["return"]
+        if response and u"result" in response and response[u"result"] == u"success":
+            return response[u"return"]
 
         return None
