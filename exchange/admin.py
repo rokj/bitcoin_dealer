@@ -61,6 +61,9 @@ class CurrencyAdmin(admin.ModelAdmin):
         return Currency.objects.filter(created_by = request.user)
 
 class TradeAdminForm(ModelForm):
+    class Meta:
+        model = Trade
+
     def __init__(self, *args, **kwargs):
         super(TradeAdminForm, self).__init__(*args, **kwargs)
         self.fields["related"].widget = Select()
@@ -68,7 +71,7 @@ class TradeAdminForm(ModelForm):
 
 class TradeAdmin(admin.ModelAdmin):
     exclude = ('user', 'created_by', 'updated_by', 'datetime_deleted', )
-    list_display = ('pk', '_buy_or_sell', '_watch_price', 'price', 'amount', 'currency', 'exchange', 'status', 'related', 'active', 'datetime_updated', )
+    list_display = ('pk', '_buy_or_sell', '_watch_price', 'price', 'amount', 'total', 'currency', 'exchange', 'status', 'related', 'active', 'datetime_updated', )
     fields = ('watch_price', 'lp_higher', 'buy_or_sell', 'price', 'amount', 'currency', 'related', 'exchange', 'exchange_oid', 'status', 'active',)
     ordering = ('-id',)
     readonly_fields = ( 'exchange_oid', )
@@ -85,7 +88,6 @@ class TradeAdmin(admin.ModelAdmin):
     def _buy_or_sell(self, obj):
         if obj.buy_or_sell == True:
             return _('Buying')
-        
         else:
             return _('Selling')
     _buy_or_sell.short_description = 'Buying or selling'

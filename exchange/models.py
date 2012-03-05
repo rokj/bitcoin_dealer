@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -84,6 +86,9 @@ class Trade(SkeletonU):
     related = models.ForeignKey('self', help_text=_('Only if related order was successfully executed, only then this order will be executed also'), null=True, blank=True)
     exchange = models.ForeignKey(Exchange, related_name='(app_label)s_%(class)s_exchange', null=False, blank=False) 
     currency = models.ForeignKey(Currency, related_name='(app_label)s_%(class)s_currency', null=False, blank=False)
+
+    def total(self):
+        return u'%s' % (str(round(Decimal(self.price*self.amount), 8)))
 
     def __unicode__(self):
         return u'%s - %s %s %s' % (self.pk, self.watch_price, self.price, self.amount)
