@@ -115,8 +115,8 @@ class MtGox1(ExchangeAbstract):
 
         Returns order ID if order was placed successfully.
         """
-        if not self.key or self.key is None: return
-        if not self.secret or self.secret is None: return
+        if not self.key or self.key is None: return None
+        if not self.secret or self.secret is None: return None
 
         price = self._to_int_price(price, currency)
         amount = self._to_int_amount(amount)
@@ -127,6 +127,7 @@ class MtGox1(ExchangeAbstract):
             return None
 
         if not amount or amount is None: return None
+
 
         self.buy_url["url"] = self._change_currency_url(self.buy_url["url"], currency)
 
