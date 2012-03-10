@@ -36,7 +36,7 @@ variables:
 
  export PYTHONPATH=/your_path_to_one_path_less_than_bitcoin_dealer/ 
 
-bitcoin_dealer is the name of the folder you have cloned this project. If you have bitcoin_dealer in **/programs/bitcoin_dealer/** then you should export **PYTHONPATH=/programs/**.
+bitcoin_dealer is the name of the folder you have cloned this project. If you have bitcoin_dealer in **/programs/bitcoin_dealer/** then you should export **PYTHONPATH=$PYTHONPATH:/programs/**.
 
 Info
 ----
