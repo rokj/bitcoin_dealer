@@ -24,7 +24,7 @@ Installation
 * Set DEBUG to True in settings.py and set TEMPLATE_DEBUG to DEBUG.
 * Start trading script with in root bitcoin dealer folder like:
   python -u scripts/dealing.py
-* Start webserver in root bicoin dealer folder like:
+* Start webserver in bitcoin_dealer's folder like:
   python manage.py runserver 8000
 * Goto http://127.0.0.1:8000/admin/ and trade.
 
