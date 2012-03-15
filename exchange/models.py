@@ -80,14 +80,17 @@ class Trade(SkeletonU):
     watch_price = models.DecimalField(_('Price to watch'), max_digits=10, decimal_places=5, null=False, blank=False)
     price = models.DecimalField(_('Buy or sell at price'), max_digits=10, decimal_places=5, null=False, blank=False)
     amount = models.DecimalField(_('Amount'), max_digits=16, decimal_places=8, null=False, blank=False)
+    total_price = models.DecimalField(_('Total price'), help_text=_('This is real total money spent/got on exchange for this trade (it includes fees if exchange supports that)'), max_digits=10, decimal_places=5, null=True, blank=True)
+    total_amount = models.DecimalField(_('Total amount'), help_text=_('This is real total number of Bitcoins bought/sold on exchange for this trade (it includes fees if exchange supports that)'), max_digits=16, decimal_places=8, null=True, blank=True)
     status = models.CharField(_('Status of trade'), help_text=_('status of trade'), max_length=30, null=False, blank=False, choices=TRADE_STATUS, default='waiting')
     active = models.BooleanField(_('Active or not'), help_text=_('active == TRUE, not active == FALSE'), default=False, null=False, blank=False)
+    completed = models.BooleanField(_('Completed on exchange'), help_text=_('This is true if trade was fully executed/completed or not on exchange'), default=False, null=False, blank=False)
     exchange_oid = models.CharField(_('Exchanges order ID'), help_text=_('Some exchanges returned id of a trade or something (we have it in format of http://en.wikipedia.org/wiki/UUID)'), max_length=36, null=True, blank=True, db_index=True) 
     related = models.ForeignKey('self', help_text=_('Only if related order was successfully executed, only then this order will be executed also'), null=True, blank=True)
     exchange = models.ForeignKey(Exchange, related_name='(app_label)s_%(class)s_exchange', null=False, blank=False) 
     currency = models.ForeignKey(Currency, related_name='(app_label)s_%(class)s_currency', null=False, blank=False)
 
-    def total(self):
+    def approximate_total(self):
         return u'%s' % (str(round(Decimal(self.price*self.amount), 8)))
 
     def __unicode__(self):

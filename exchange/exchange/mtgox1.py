@@ -10,10 +10,12 @@ class MtGox1(ExchangeAbstract):
     """
 
     last_price = {}
+    order = None
 
     ticker_url = { "method": "GET", "url": "https://mtgox.com/api/1/BTCUSD/public/ticker" }
     buy_url = { "method": "POST", "url": "https://mtgox.com/api/1/BTCUSD/private/order/add" }
     sell_url = { "method": "POST", "url": "https://mtgox.com/api/1/BTCUSD/private/order/add" }
+    order_url = { "method": "POST", "url": "https://mtgox.com/api/1/generic/private/order/result" }
     open_orders_url = { "method": "POST", "url": "https://mtgox.com/api/1/generic/private/orders" }
 
     key = None
@@ -40,6 +42,10 @@ class MtGox1(ExchangeAbstract):
         http_pool = urllib3.connection_from_url(url['url'])
         response = http_pool.urlopen(url['method'], url['url'], body=urllib.urlencode(params), headers=headers)
 
+        print "START"
+        print response.data
+        print "STOP"
+
         if response.status == 200:
             return json.loads(response.data)
 
@@ -62,7 +68,31 @@ class MtGox1(ExchangeAbstract):
 
         return int(amount * 100000000)
 
+    def get_order(self):
+        """
+        Method gets particular order.
+        """
+
+        if not self.key or self.key is None: return
+        if not self.secret or self.secret is None: return
+
+        # params = [ ("nonce", self._create_nonce()), ("order", "fde4898f-2331-4c5c-ad12-556c19f6365f"), ("type", "bid") ]
+        params = [ ("nonce", self._create_nonce()), ("order", "df5834dd-e466-47bb-af53-18bfbb011ebe"), ("type", "bid") ]
+        headers = { 'Rest-Key': self.key, 'Rest-Sign': base64.b64encode(str(hmac.new(base64.b64decode(self.secret), urllib.urlencode(params), hashlib.sha512).digest())) }
+
+        response = self._send_request(self.order_url, params, headers)
+
+        if response and u"result" in response and response[u"result"] == u"success":
+            return response[u"return"]
+
+        return None
+        
+
     def get_orders(self):
+        """
+        Method gets open orders.
+        """
+
         if not self.key or self.key is None: return
         if not self.secret or self.secret is None: return
 
