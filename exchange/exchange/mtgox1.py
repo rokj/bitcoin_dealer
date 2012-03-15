@@ -68,7 +68,10 @@ class MtGox1(ExchangeAbstract):
 
         return int(amount * 100000000)
 
-    def get_order(self):
+    def set_order(self):
+        self.order = Order()
+
+    def get_order1(self):
         """
         Method gets particular order.
         """
@@ -84,9 +87,6 @@ class MtGox1(ExchangeAbstract):
 
         if response and u"result" in response and response[u"result"] == u"success":
             return response[u"return"]
-
-        return None
-        
 
     def get_orders(self):
         """
@@ -105,6 +105,15 @@ class MtGox1(ExchangeAbstract):
             return response[u"return"]
 
         return None
+
+    def get_last_price(self, currency):
+        self.set_last_price(currency)
+        
+        return self.last_price[currency]
+
+    def set_last_price(self, currency):
+        last_price = self.get_price(currency)
+        self.last_price[currency] = last_price
 
     def get_price(self, currency):
         if currency in self.last_price:
