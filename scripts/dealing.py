@@ -233,21 +233,18 @@ while True:
         except NameError:
             exchanges = {}
 
-        print "exchanges"
-        print exchanges
-        # print getattr(sys.modules[__name__], settings.EXCHANGES["mtgox"]["classname"])(**settings.EXCHANGES["mtgox"])
-        # print getattr(sys.modules[__name__], settings.EXCHANGES["mtgox"]["classname"])
-
         active_exchanges = Exchange.objects.filter(active=True)
         for exchange in active_exchanges:
             if exchange.name in settings.EXCHANGES:
-                exchanges[exchange.name] = MtGox1() # with (**settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
+                exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]["classname"])(**settings.EXCHANGES[exchange.name]) # with (**settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
 
         last_price = exchanges["mtgox"].get_last_price("USD")
         print last_price
 
-        # exchanges["mtgox"].order = exchanges["mtgox"].get_order(trade)
-        # print exchanges["mtgox"].order
+        exchanges["mtgox"].order = exchanges["mtgox"].get_order(None)
+        print exchanges["mtgox"].order
+        print exchanges["mtgox"].order.sum_price
+        print exchanges["mtgox"].order.sum_btcs
 
         """
         order = exchanges["mtgox"].get_order()

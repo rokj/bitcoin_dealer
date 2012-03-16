@@ -7,18 +7,35 @@ class Order:
     exchange["blabla"].order.trades = exchanges["blabla"].get_order(trades)
     """
     trades = None
+    sum_price = 0
+    sum_btcs = 0
+
+    def __init__(self):
+        self.trades = None
+        self.sum_price = 0
+        self.sum_btcs = 0
 
 class ExchangeAbstract:
     __metaclass__ = ABCMeta
 
-
     @abstractproperty
-    def last_price(self):
+    def order(self):
         return 'Should never see this'
 
-    @last_price.setter
-    def last_price(self, last_price):
+    @order.setter
+    def order(self, order):
         return
+
+    def __init__(self):
+        return
+
+    @abstractmethod
+    def get_order(self, trade):
+        """
+        TODO
+        """
+
+        return None
 
     @abstractmethod
     def get_orders(self):
