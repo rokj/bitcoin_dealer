@@ -9,8 +9,7 @@ class MtGox1(ExchangeAbstract):
     https://en.bitcoin.it/wiki/MtGox/API
     """
 
-    last_price = {}
-    order = None
+    _last_price = {}
 
     ticker_url = { "method": "GET", "url": "https://mtgox.com/api/1/BTCUSD/public/ticker" }
     buy_url = { "method": "POST", "url": "https://mtgox.com/api/1/BTCUSD/private/order/add" }
@@ -22,15 +21,24 @@ class MtGox1(ExchangeAbstract):
     secret = None
     classname = None
 
+    @property
+    def last_price(self):
+        return self._last_price
+
+    @last_price.setter
+    def last_price(self, last_price):
+        self._last_price = last_price
+
     def __init__(self, **kwargs):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
+
+        self._last_price = {}
 
     def _change_currency_url(self, url, currency):
         return re.sub(r'BTC\w{3}', r'BTC' + currency, url)
 
     def _create_nonce(self):
-        print int(time.time() * 1000000)
         return int(time.time() * 1000000)
 
     def _send_request(self, url, params, extra_headers=None):

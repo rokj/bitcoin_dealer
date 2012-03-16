@@ -11,19 +11,14 @@ class Order:
 class ExchangeAbstract:
     __metaclass__ = ABCMeta
 
-    """
-    @abstractproperty
-    def order(self):
-        return 'Should never see this'
-    
-    @order.setter
-    def order(self, order):
-        return
 
-    def __init__(self):
-        self._order = None
-            
-    """
+    @abstractproperty
+    def last_price(self):
+        return 'Should never see this'
+
+    @last_price.setter
+    def last_price(self, last_price):
+        return
 
     @abstractmethod
     def get_orders(self):

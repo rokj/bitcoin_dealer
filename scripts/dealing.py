@@ -22,7 +22,7 @@ def trade(trades):
             last_price = exchanges[trade.exchange.name].get_last_price(trade.currency.abbreviation)
         else:
             continue
-        
+
         if last_price is None: continue
 
         last_price = Decimal(last_price)
@@ -217,12 +217,12 @@ def check_status(trades, orders):
                 trade_log.save()
                 if (settings.bd_debug == True):
 					console_log("bought %s bitcoins at %s %s" % (trade.amount, trade.price, trade.currency.abbreviation))
-        
+
         if trade.exchange_oid is not None and (trade.status == "buying" or trade.status == "bought") and trade.completed == False:
             response = exchanges[trade.exchange.name].get_order(trade.exchange_oid)
             trade.total_price = exchanges[trade.exchange.name].order.total_price
             trade.total_amount = exchanges[trade.exchange.name].order.total_amount
-            
+
 
 while True:
     time.sleep(settings.check_interval)
@@ -233,13 +233,15 @@ while True:
         except NameError:
             exchanges = {}
 
+        print "exchanges"
         print exchanges
         # print getattr(sys.modules[__name__], settings.EXCHANGES["mtgox"]["classname"])(**settings.EXCHANGES["mtgox"])
+        # print getattr(sys.modules[__name__], settings.EXCHANGES["mtgox"]["classname"])
 
         active_exchanges = Exchange.objects.filter(active=True)
         for exchange in active_exchanges:
             if exchange.name in settings.EXCHANGES:
-                exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]["classname"])(**settings.EXCHANGES[exchange.name]) # with (**settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
+                exchanges[exchange.name] = MtGox1() # with (**settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
 
         last_price = exchanges["mtgox"].get_last_price("USD")
         print last_price
