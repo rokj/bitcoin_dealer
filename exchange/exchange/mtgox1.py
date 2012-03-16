@@ -1,7 +1,7 @@
 import sys, os, re, urllib, urllib3, httplib, time, json, hmac, hashlib, base64
 
 from decimal import Decimal
-from exchange.exchange_abstract import ExchangeAbstract
+from exchange.exchange_abstract import ExchangeAbstract, Order
 
 class MtGox1(ExchangeAbstract):
     """
@@ -30,6 +30,7 @@ class MtGox1(ExchangeAbstract):
         return re.sub(r'BTC\w{3}', r'BTC' + currency, url)
 
     def _create_nonce(self):
+        print int(time.time() * 1000000)
         return int(time.time() * 1000000)
 
     def _send_request(self, url, params, extra_headers=None):
@@ -41,10 +42,6 @@ class MtGox1(ExchangeAbstract):
 
         http_pool = urllib3.connection_from_url(url['url'])
         response = http_pool.urlopen(url['method'], url['url'], body=urllib.urlencode(params), headers=headers)
-
-        print "START"
-        print response.data
-        print "STOP"
 
         if response.status == 200:
             return json.loads(response.data)
@@ -68,10 +65,7 @@ class MtGox1(ExchangeAbstract):
 
         return int(amount * 100000000)
 
-    def set_order(self):
-        self.order = Order()
-
-    def get_order1(self):
+    def get_order(self, trade):
         """
         Method gets particular order.
         """
@@ -86,7 +80,11 @@ class MtGox1(ExchangeAbstract):
         response = self._send_request(self.order_url, params, headers)
 
         if response and u"result" in response and response[u"result"] == u"success":
-            return response[u"return"]
+            order = Order()
+            order.trades = response[u"return"]
+            return order
+
+        return None
 
     def get_orders(self):
         """
@@ -107,16 +105,9 @@ class MtGox1(ExchangeAbstract):
         return None
 
     def get_last_price(self, currency):
-        self.set_last_price(currency)
-        
-        return self.last_price[currency]
-
-    def set_last_price(self, currency):
-        last_price = self.get_price(currency)
-        self.last_price[currency] = last_price
-
-    def get_price(self, currency):
         if currency in self.last_price:
+            print "alah"
+            print self.last_price
             return self.last_price[currency]
 
         self.ticker_url["url"] = self._change_currency_url(self.ticker_url["url"], currency)

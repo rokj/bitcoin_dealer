@@ -1,49 +1,30 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 import bitcoin_dealer.settings as settings
 
-class OrderAbstract:
-    __metaclass__ = ABCMeta
-
-    def __init__(self):
-        self._trades = None
-
-    def get_trades(self):
-        return self._trades
-    def set_trades(self, value):
-        self._trades = value
-    def del_trades(self):
-        del self._trades
-    trades = abstractproperty(get_trades, set_trades, del_trades)
+class Order:
+    """
+    This one is not abstract, but just base class for setting 
+    exchange["blabla"].order.trades = exchanges["blabla"].get_order(trades)
+    """
+    trades = None
 
 class ExchangeAbstract:
     __metaclass__ = ABCMeta
 
-    def __init__(self):
-        self._last_price = {}
-        # self._order = OrderAbstract()
-
-    def get_last_price(self, currency):
-        return self._last_price[currency]
-    def set_last_price(self, currency):
-        self._last_price[currency] = {}
-    def del_last_price(self):
-        self._last_price = {}
-        del self._last_price
-    last_price = abstractproperty(get_last_price, set_last_price, del_last_price)
-
     """
-    def get_order(self):
-        return self._order
-    def set_order(self, value):
-        self._order = value
-    def del_order(self):
-        del self._order
-    order = abstractproperty(getorder, setorder, delorder)
+    @abstractproperty
+    def order(self):
+        return 'Should never see this'
+    
+    @order.setter
+    def order(self, order):
+        return
 
     def __init__(self):
         self._order = None
-    """
             
+    """
+
     @abstractmethod
     def get_orders(self):
         """
@@ -58,9 +39,9 @@ class ExchangeAbstract:
         return None
 
     @abstractmethod
-    def get_price(self, currency):
+    def get_last_price(self, currency):
         """
-        Retrieves last price for particular exchange.
+        Retrieves last price from for particular currency.
 
         Should return Decimal value of a price.
         """

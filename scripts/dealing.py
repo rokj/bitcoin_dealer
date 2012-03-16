@@ -19,7 +19,7 @@ def console_log(message):
 def trade(trades):
     for trade in trades:
         if trade.exchange.name in exchanges:
-            last_price = exchanges[trade.exchange.name].get_price(trade.currency.abbreviation)
+            last_price = exchanges[trade.exchange.name].get_last_price(trade.currency.abbreviation)
         else:
             continue
         
@@ -227,14 +227,25 @@ def check_status(trades, orders):
 while True:
     time.sleep(settings.check_interval)
     try:
-        exchanges = {}
+
+        try:
+            exchanges.clear()
+        except NameError:
+            exchanges = {}
+
+        print exchanges
+        # print getattr(sys.modules[__name__], settings.EXCHANGES["mtgox"]["classname"])(**settings.EXCHANGES["mtgox"])
+
         active_exchanges = Exchange.objects.filter(active=True)
         for exchange in active_exchanges:
             if exchange.name in settings.EXCHANGES:
-                exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]['classname'])(**settings.EXCHANGES[exchange.name]) # with (settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
+                exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]["classname"])(**settings.EXCHANGES[exchange.name]) # with (**settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
 
-        last_price = exchanges["mtgox"].last_price
+        last_price = exchanges["mtgox"].get_last_price("USD")
         print last_price
+
+        # exchanges["mtgox"].order = exchanges["mtgox"].get_order(trade)
+        # print exchanges["mtgox"].order
 
         """
         order = exchanges["mtgox"].get_order()
