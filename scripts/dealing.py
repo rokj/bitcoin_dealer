@@ -218,11 +218,16 @@ def check_status(trades, orders):
                 if (settings.bd_debug == True):
 					console_log("bought %s bitcoins at %s %s" % (trade.amount, trade.price, trade.currency.abbreviation))
 
-        if trade.exchange_oid is not None and (trade.status == "buying" or trade.status == "bought") and trade.completed == False:
-            response = exchanges[trade.exchange.name].get_order(trade.exchange_oid)
-            trade.total_price = exchanges[trade.exchange.name].order.total_price
-            trade.total_amount = exchanges[trade.exchange.name].order.total_amount
-
+        exchanges[trade.exchange.name].order = None        
+        if trade.exchange_oid is not None and trade.completed == False and (trade.status == "buying" or trade.status == "bought"):
+            if (settings.bd_debug == True):
+	            console_log("trade %s at price %s, amount %s and currency %s is still not being completed, so we will check for completed transactions" % (trade.pk, trade.price, trade.amount trade.currency.abbreviation))
+	                    
+            exchanges[trade.exchange.name].order = exchanges[trade.exchange.name].get_order(trade)
+            trade.total_price = exchanges[trade.exchange.name].order.sum_price
+            trade.total_amount = exchanges[trade.exchange.name].order.sum_amount
+            if (trade.status == "bought") trade.completed = True            
+            trade.save()
 
 while True:
     time.sleep(settings.check_interval)
@@ -237,27 +242,6 @@ while True:
         for exchange in active_exchanges:
             if exchange.name in settings.EXCHANGES:
                 exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]["classname"])(**settings.EXCHANGES[exchange.name]) # with (**settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
-
-        last_price = exchanges["mtgox"].get_last_price("USD")
-        print last_price
-
-        exchanges["mtgox"].order = exchanges["mtgox"].get_order(None)
-        print exchanges["mtgox"].order
-        print exchanges["mtgox"].order.sum_price
-        print exchanges["mtgox"].order.sum_btcs
-
-        """
-        order = exchanges["mtgox"].get_order()
-
-        if u"trades" in order:
-            sum_price = 0
-            sum_btcs = 0
-            for trade in order["trades"]:
-                sum_price += Decimal(trade[u"amount"][u"value"]) * Decimal((trade[u"price"][u"value"]))
-                sum_btcs += Decimal(trade[u"amount"][u"value"])
-        print order
-        print sum_price
-        print sum_btcs
 
         my_trades = Trade.objects.filter(exchange__in=active_exchanges, active=True)
         trade(my_trades)
@@ -277,7 +261,6 @@ while True:
             check_status(all_my_trades, my_open_orders)
             if (settings.bd_debug == True):
 	            console_log("just checked statuses of orders...")
-        """
 
         if (settings.bd_debug == True):
             console_log("sleeping %d seconds..." % settings.check_interval)

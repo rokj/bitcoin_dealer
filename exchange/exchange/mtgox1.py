@@ -95,13 +95,13 @@ class MtGox1(ExchangeAbstract):
                 order.trades = response[u"return"][u"trades"]
 
                 sum_price = 0
-                sum_btcs = 0
+                sum_amount = 0
                 for trade in response[u"return"]["trades"]:
                     sum_price += Decimal(trade[u"amount"][u"value"]) * Decimal((trade[u"price"][u"value"]))
-                    sum_btcs += Decimal(trade[u"amount"][u"value"])
+                    sum_amount += Decimal(trade[u"amount"][u"value"])
 
                 order.sum_price = sum_price
-                order.sum_btcs = sum_btcs
+                order.sum_amount = sum_amount
 
                 return order
 

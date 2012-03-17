@@ -8,12 +8,12 @@ class Order:
     """
     trades = None
     sum_price = 0
-    sum_btcs = 0
+    sum_amount = 0
 
     def __init__(self):
         self.trades = None
         self.sum_price = 0
-        self.sum_btcs = 0
+        self.sum_amount = 0
 
 class ExchangeAbstract:
     __metaclass__ = ABCMeta
@@ -32,7 +32,14 @@ class ExchangeAbstract:
     @abstractmethod
     def get_order(self, trade):
         """
-        TODO
+        Should return Order() with mandatory attributes set sum_price,
+        sum_amount and optional trades.
+        
+        order = Order()
+        
+        order.sum_price = total money amount spent/got from particular order.
+        order.sum_amount = total amount ot Bitcoins got/sold
+        order.trades = this is optional for now. You can put trades from particular order.
         """
 
         return None
