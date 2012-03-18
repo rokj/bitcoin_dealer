@@ -1,7 +1,7 @@
 Bitcoin dealer
 ==============
 
-Bitcoin dealer is simple Django program for trading bitcoins currently only on MtGox exchange. 
+Bitcoin dealer is simple Django program (trading bot) for trading bitcoins currently only on MtGox exchange. 
 
 Bitcoin delaer supports MtGox API version 1 (https://en.bitcoin.it/wiki/MtGox/API) with following currencies:
 USD, EUR, GBP, PLN, CAD, AUD, CHF, CNY, NZD, RUB, DKK, HKD, SGD, THB, JPY, SEK
