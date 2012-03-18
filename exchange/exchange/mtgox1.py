@@ -34,12 +34,8 @@ class MtGox1(ExchangeAbstract):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
-<<<<<<< HEAD
-        self.last_price = {}
-=======
         self._last_price = {}
         self._order = None
->>>>>>> total
 
     def _change_currency_url(self, url, currency):
         return re.sub(r'BTC\w{3}', r'BTC' + currency, url)
