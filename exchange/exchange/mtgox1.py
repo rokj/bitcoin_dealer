@@ -1,7 +1,7 @@
 import sys, os, re, urllib, urllib3, httplib, time, json, hmac, hashlib, base64
 
 from decimal import Decimal
-from exchange.exchange_abstract import ExchangeAbstract
+from exchange.exchange_abstract import ExchangeAbstract, Order
 
 class MtGox1(ExchangeAbstract):
     """
@@ -9,22 +9,37 @@ class MtGox1(ExchangeAbstract):
     https://en.bitcoin.it/wiki/MtGox/API
     """
 
-    last_price = {}
+    _last_price = {}
+    _order = None
 
     ticker_url = { "method": "GET", "url": "https://mtgox.com/api/1/BTCUSD/public/ticker" }
     buy_url = { "method": "POST", "url": "https://mtgox.com/api/1/BTCUSD/private/order/add" }
     sell_url = { "method": "POST", "url": "https://mtgox.com/api/1/BTCUSD/private/order/add" }
+    order_url = { "method": "POST", "url": "https://mtgox.com/api/1/generic/private/order/result" }
     open_orders_url = { "method": "POST", "url": "https://mtgox.com/api/1/generic/private/orders" }
 
     key = None
     secret = None
     classname = None
 
+    @property
+    def order(self):
+        return self._order
+
+    @order.setter
+    def order(self, order):
+        self._order = order
+
     def __init__(self, **kwargs):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
+<<<<<<< HEAD
         self.last_price = {}
+=======
+        self._last_price = {}
+        self._order = None
+>>>>>>> total
 
     def _change_currency_url(self, url, currency):
         return re.sub(r'BTC\w{3}', r'BTC' + currency, url)
@@ -64,7 +79,49 @@ class MtGox1(ExchangeAbstract):
 
         return int(amount * 100000000)
 
+    def get_order(self, trade):
+        """
+        Method gets particular order.
+        """
+
+        if not self.key or self.key is None: return
+        if not self.secret or self.secret is None: return
+
+        order_type = ""
+        if trade.buy_or_sell == True:
+            order_type = "bid"
+        elif trade.buy_or_sell == False:
+            order_type = "ask"
+        params = [ ("nonce", self._create_nonce()), ("order", trade.exchange_oid), ("type", order_type) ]
+        headers = { 'Rest-Key': self.key, 'Rest-Sign': base64.b64encode(str(hmac.new(base64.b64decode(self.secret), urllib.urlencode(params), hashlib.sha512).digest())) }
+
+        response = self._send_request(self.order_url, params, headers)
+
+        if response and u"result" in response and response[u"result"] == u"success":
+            order = Order()
+            if u"trades" in response[u"return"]:
+                order.trades = response[u"return"][u"trades"]
+
+                sum_price = 0
+                sum_amount = 0
+                for trade in response[u"return"]["trades"]:
+                    sum_price += Decimal(trade[u"amount"][u"value"]) * Decimal((trade[u"price"][u"value"]))
+                    sum_amount += Decimal(trade[u"amount"][u"value"])
+
+                order.sum_price = sum_price
+                order.sum_amount = sum_amount
+
+                return order
+        elif response and u"result" in response and response[u"result"] == u"error":
+            return {"error": response[u"error"]}
+
+        return None
+
     def get_orders(self):
+        """
+        Method gets open orders.
+        """
+
         if not self.key or self.key is None: return
         if not self.secret or self.secret is None: return
 
@@ -78,15 +135,15 @@ class MtGox1(ExchangeAbstract):
 
         return None
 
-    def get_price(self, currency):
-        if currency in self.last_price:
-            return self.last_price[currency]
+    def get_last_price(self, currency):
+        if currency in self._last_price:
+            return self._last_price[currency]
 
         self.ticker_url["url"] = self._change_currency_url(self.ticker_url["url"], currency)
 
         response = self._send_request(self.ticker_url, {})
         if response and u"result" in response and response[u"result"] == u"success" and u"return" in response and u"last_local" in response[u"return"]:
-            self.last_price[currency] = Decimal(response[u"return"][u"last_local"][u"value"])
+            self._last_price[currency] = Decimal(response[u"return"][u"last_local"][u"value"])
 
             return Decimal(response[u"return"][u"last_local"][u"value"])
 

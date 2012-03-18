@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath('../bitcoin_dealer'))
 
 from bitcoin_dealer.exchange.exchange.mtgox1 import MtGox1
 from bitcoin_dealer.exchange.models import Trade, TradeLog, Exchange
-from bitcoin_dealer.exchange.exchange_abstract import ExchangeAbstract
+import bitcoin_dealer.exchange.exchange_abstract
 import bitcoin_dealer.settings as settings
 
 def console_log(message):
@@ -19,10 +19,10 @@ def console_log(message):
 def trade(trades):
     for trade in trades:
         if trade.exchange.name in exchanges:
-            last_price = exchanges[trade.exchange.name].get_price(trade.currency.abbreviation)
+            last_price = exchanges[trade.exchange.name].get_last_price(trade.currency.abbreviation)
         else:
             continue
-        
+
         if last_price is None: continue
 
         last_price = Decimal(last_price)
@@ -218,14 +218,44 @@ def check_status(trades, orders):
                 if (settings.bd_debug == True):
 					console_log("bought %s bitcoins at %s %s" % (trade.amount, trade.price, trade.currency.abbreviation))
 
+        if trade.exchange_oid is not None and trade.completed == False and (trade.status == "buying" or trade.status == "bought" or trade.status == "selling" or trade.status == "sold"):
+            if (settings.bd_debug == True):
+                if trade.status == "buying" or trade.status == "selling":
+    	            console_log("trade %s at price %s, amount %s and currency %s is still not being completed, so we will check for completed transactions" % (trade.pk, trade.price, trade.amount, trade.currency.abbreviation))
+                elif trade.status == "bought" or trade.status == "sold":
+    	            console_log("trade %s at price %s, amount %s and currency %s was fully executed, but we do not have a final sum of money we got/spent for the trade, so we will do this right now" % (trade.pk, trade.price, trade.amount, trade.currency.abbreviation))
+	                    
+            exchanges[trade.exchange.name].order = None        
+            exchanges[trade.exchange.name].order = exchanges[trade.exchange.name].get_order(trade)
+
+            # isinstance not working properly, so we "hack" a little bit
+            if hasattr(exchanges[trade.exchange.name].order, "sum_price") and hasattr(exchanges[trade.exchange.name].order, "sum_amount"):
+                trade.total_price = exchanges[trade.exchange.name].order.sum_price
+                trade.total_amount = exchanges[trade.exchange.name].order.sum_amount
+                if (trade.status == "bought" or trade.status == "sold"):
+                    trade.completed = True
+                trade.save()
+            elif isinstance(exchanges[trade.exchange.name].order, dict):
+                if "error" in exchanges[trade.exchange.name].order:
+                    trade.completed = True
+                    trade.save()
+
+                    trade_log = TradeLog(created_by=trade.user, trade=trade, log="custom", log_desc="Error for trade %s with message from exchange %s." % (trade.pk, exchanges[trade.exchange.name].order["error"]))
+                    trade_log.save()
+
 while True:
     time.sleep(settings.check_interval)
     try:
-        exchanges = {}
+
+        try:
+            exchanges.clear()
+        except NameError:
+            exchanges = {}
+
         active_exchanges = Exchange.objects.filter(active=True)
         for exchange in active_exchanges:
             if exchange.name in settings.EXCHANGES:
-                exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]['classname'])(**settings.EXCHANGES[exchange.name]) # with (settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
+                exchanges[exchange.name] = getattr(sys.modules[__name__], settings.EXCHANGES[exchange.name]["classname"])(**settings.EXCHANGES[exchange.name]) # with (**settings.EXCHANGES[exchange.name]) at the end, constructor of class gets called with settings paramaters http://stackoverflow.com/questions/553784/can-you-use-a-string-to-instantiate-a-class-in-python
 
         my_trades = Trade.objects.filter(exchange__in=active_exchanges, active=True)
         trade(my_trades)
