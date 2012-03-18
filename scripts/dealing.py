@@ -245,7 +245,7 @@ def check_status(trades, orders):
                     trade_log = TradeLog(created_by=trade.user, trade=trade, log="custom", log_desc="Error for trade %s with message %s from exchange." % (trade.pk, exchanges[trade.exchange.name].order["error"]))
                     trade_log.save()
 
-                    if (settings.bg_debug == True):
+                    if (settings.bd_debug == True):
         	            console_log("trade %s at price %s, amount %s and currency %s completed with error on getting transactions from exchange. Message was %s." % (trade.pk, trade.price, trade.amount, trade.currency.abbreviation, exchanges[trade.exchange.name].order["error"]))
 
 while True:
