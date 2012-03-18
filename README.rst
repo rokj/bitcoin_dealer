@@ -54,8 +54,12 @@ Every time you do "python manage.py syncdb" tables exchange_currency, exchange_e
 
 You like these few lines of code, you find it useful or want new feature? 
 ----------------------------------------
-You can donate a bitcoin or few on:
+You can donate a bitcoin or few:
 1MC1BSkwD45gAuQ8mvXtD1RZWhNtxGV1ho
+
+Help
+----
+See AUTHORS.
 
 Developers
 ----------
