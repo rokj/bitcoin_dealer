@@ -52,6 +52,8 @@ Program works correctly only if you have enough funds (bitcoins, $, €, ...) on
 
 Every time you do "python manage.py syncdb" tables exchange_currency, exchange_exchange and exchange_exchange_currencies will be overwritten by data from initial_data.json.
 
+There is no south (http://south.aeracode.org/) or similar support implemented. There are database differences between revisions. At worst case, backup old database, do "python manage.py syncdb" and "restore by hand".
+
 You like these few lines of code, you find it useful or want new feature? 
 ----------------------------------------
 You can donate a bitcoin or few:
