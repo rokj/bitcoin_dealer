@@ -83,8 +83,12 @@ class MtGox1(ExchangeAbstract):
         if not self.key or self.key is None: return
         if not self.secret or self.secret is None: return
 
-        # params = [ ("nonce", self._create_nonce()), ("order", "fde4898f-2331-4c5c-ad12-556c19f6365f"), ("type", "bid") ]
-        params = [ ("nonce", self._create_nonce()), ("order", "df5834dd-e466-47bb-af53-18bfbb011ebe"), ("type", "bid") ]
+        order_type = ""
+        if trade.buy_or_sell == True:
+            order_type = "bid"
+        elif trade.buy_or_sell == False:
+            order_type = "ask"
+        params = [ ("nonce", self._create_nonce()), ("order", trade.exchange_oid), ("type", order_type) ]
         headers = { 'Rest-Key': self.key, 'Rest-Sign': base64.b64encode(str(hmac.new(base64.b64decode(self.secret), urllib.urlencode(params), hashlib.sha512).digest())) }
 
         response = self._send_request(self.order_url, params, headers)
@@ -104,6 +108,8 @@ class MtGox1(ExchangeAbstract):
                 order.sum_amount = sum_amount
 
                 return order
+        elif response and u"result" in response and response[u"result"] == u"error":
+            return {"error": response[u"error"]}
 
         return None
 

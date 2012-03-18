@@ -38,7 +38,8 @@ LOG = (
     ('not enough funds', 'not enough funds'),
     ('could not get price', 'could not get price'),
     ('could not get orders', 'could not get orders'),
-    ('custom', 'custom')
+    ('custom', 'custom'),
+    ('no data found', 'no data found')
 )
 
 class Currency(SkeletonU):
@@ -91,10 +92,23 @@ class Trade(SkeletonU):
     currency = models.ForeignKey(Currency, related_name='(app_label)s_%(class)s_currency', null=False, blank=False)
 
     def approximate_total(self):
-        return u'%s' % (str(round(Decimal(self.price*self.amount), 8)))
+        return u"%s" % (round(Decimal(self.price*self.amount), 8))
+
+    def total(self):
+        if self.completed == True:
+            trade_log = TradeLog.objects.filter(trade=self.pk,log="no data found")
+            if trade_log and len(trade_log) > 0:
+                return u"no transactions found"
+
+            if not self.total_price or not self.total_amount:
+                return u""
+
+            return u"%s (%s BTCs)" % (self.total_price, self.total_amount,)
+
+        return u""
 
     def __unicode__(self):
-        return u'%s - %s %s %s' % (self.pk, self.watch_price, self.price, self.amount)
+        return u"%s - %s %s %s" % (self.pk, self.watch_price, self.price, self.amount)
 
 class TradeLog(SkeletonU):
     datetime = models.DateTimeField(_('Datetime of log'), auto_now=True, auto_now_add=True, null=False, blank=False)

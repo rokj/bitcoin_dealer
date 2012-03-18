@@ -6,7 +6,7 @@ from models import Trade, TradeLog, Currency, Exchange
 
 class ExchangeAdmin(admin.ModelAdmin):
     exclude = ('created_by', 'updated_by', 'datetime_deleted', )
-    readonly_fields = ( 'name', )
+    readonly_fields = ('name', )
 
     def save_model(self, request, obj, form, change):
         if obj.active == False:

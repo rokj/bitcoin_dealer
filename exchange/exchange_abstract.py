@@ -9,6 +9,7 @@ class Order:
     trades = None
     sum_price = 0
     sum_amount = 0
+    
 
     def __init__(self):
         self.trades = None
