@@ -67,7 +67,7 @@ def trade(trades):
             elif trade.active == True and trade.lp_higher == True and trade.buy_or_sell == True and trade.related is not None:
                 if trade.related.status == "sold" and trade.status == "waiting":
                     if last_price >= watch_price:
-                        response = exchanges[trade.exchange.name].buy(pritrade.price, trade.amount, trade.currency.abbreviation)
+                        response = exchanges[trade.exchange.name].buy(trade.price, trade.amount, trade.currency.abbreviation)
 
                         if response and response is not None:
                             trade.active = False
