@@ -74,7 +74,7 @@ class TradeAdmin(admin.ModelAdmin):
     list_display = ('pk', '_buy_or_sell', '_watch_price', 'price', 'amount', 'approximate_total', 'total', 'currency', 'exchange', 'status', 'related', 'completed', 'active', 'datetime_updated', )
     fields = ('watch_price', 'lp_higher', 'buy_or_sell', 'price', 'amount', 'total', 'currency', 'related', 'exchange', 'exchange_oid', 'status', 'completed', 'active', )
     ordering = ('-id',)
-    readonly_fields = ( 'exchange_oid', 'total',)
+    readonly_fields = ( 'exchange_oid', 'completed', 'total',)
     form = TradeAdminForm
 
     def _watch_price(self, obj):
