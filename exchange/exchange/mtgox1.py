@@ -92,7 +92,6 @@ class MtGox1(ExchangeAbstract):
         headers = { 'Rest-Key': self.key, 'Rest-Sign': base64.b64encode(str(hmac.new(base64.b64decode(self.secret), urllib.urlencode(params), hashlib.sha512).digest())) }
 
         response = self._send_request(self.order_url, params, headers)
-
         if response and u"result" in response and response[u"result"] == u"success":
             order = Order()
             if u"trades" in response[u"return"]:
@@ -100,9 +99,10 @@ class MtGox1(ExchangeAbstract):
 
                 sum_price = 0
                 sum_amount = 0
-                for trade in response[u"return"]["trades"]:
-                    sum_price += Decimal(trade[u"amount"][u"value"]) * Decimal((trade[u"price"][u"value"]))
-                    sum_amount += Decimal(trade[u"amount"][u"value"])
+                for exchange_trade in response[u"return"]["trades"]:
+                    if str(trade.currency) == str(exchange_trade[u"currency"]):
+                        sum_price += Decimal(exchange_trade[u"amount"][u"value"]) * Decimal((exchange_trade[u"price"][u"value"]))
+                        sum_amount += Decimal(exchange_trade[u"amount"][u"value"])
 
                 order.sum_price = sum_price
                 order.sum_amount = sum_amount
