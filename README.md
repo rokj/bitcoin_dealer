@@ -30,6 +30,14 @@ Installation
   python manage.py runserver 8000
 * Goto http://127.0.0.1:8000/admin/ and trade.
 
+Screenshots
+-----------
+
+Click to view.
+[![add trade](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-1.png)](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-1.png)
+[![edit trade](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-2.png)](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-2.png)
+[![trades](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trades.png)](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trades.png)
+
 Troubleshooting
 ---------------
 If paths for running script cannot be found and you get errors, set following
