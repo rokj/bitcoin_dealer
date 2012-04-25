@@ -14,8 +14,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'bitcoin_dealer',                      # Or path to database file if using sqlite3.
         'USER': 'bitcoin',                      # Not used with sqlite3.
-        'PASSWORD': 'byh4TaMs',                  # Not used with sqlite3.
-        'HOST': '10.0.0.35',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -157,8 +157,8 @@ EXCHANGES = {
     'mtgox': {
         'classname': 'MtGox1', # DO NOT CHANGE THIS
         # exchange specific (you can set everything below to your needs)
-        'key': '378a76e6-60b5-4467-80c5-0f9f40b88305',
-        'secret': 'rukJL4Ev7Q9QxKey/YVkUjVWa46GB0pI4ovaN6MDvs5IwLzRpqdViL6C/cIc5ONaYxcF8gkxzJCb+sEoTrea/w=='
+        'key': '',
+        'secret': ''
     },
 }
 
