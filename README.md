@@ -3,7 +3,7 @@ Bitcoin dealer
 
 Bitcoin dealer is simple Django program (trading bot) for trading bitcoins currently only on MtGox exchange. 
 
-Bitcoin dealer supports MtGox API version 1 (https://en.bitcoin.it/wiki/MtGox/API) with following currencies:
+Bitcoin dealer supports [MtGox API version 1](https://en.bitcoin.it/wiki/MtGox/API/HTTP/v1) with following currencies:
 USD, EUR, GBP, PLN, CAD, AUD, CHF, CNY, NZD, RUB, DKK, HKD, SGD, THB, JPY and SEK.
 
 Although program is really simple, it supports [stop orders](https://en.wikipedia.org/wiki/Order_%28exchange%29#Stop_orders) and maybe something more, but I am not really familiar with trading techniques and jargon.
@@ -44,7 +44,7 @@ Info
 ----
 Right now you should not change status of trades, since API v1 still does not support that (but it will have effect on other related trades if you change status from **selling** to **sold** for example). Just leave it as it is. If you would like cancel trade, go to your MtGox account and cancel trades/orders; but be careful to deactivate/cancel related first.
 
-Check https://en.bitcoin.it/wiki/MtGox/API what different verions of API support.
+Check https://en.bitcoin.it/wiki/MtGox/API what different verions of API can do.
 
 WARNING
 -------
@@ -54,7 +54,7 @@ Program works correctly only if you have enough funds (bitcoins, $, €, ...) on
 
 Every time you do "python manage.py syncdb" tables exchange_currency, exchange_exchange and exchange_exchange_currencies will be overwritten by data from initial_data.json.
 
-There is no south (http://south.aeracode.org/) or similar support implemented. There are database differences between revisions. At worst case, backup old database, do "python manage.py syncdb" and "restore by hand".
+There is no [south](http://south.aeracode.org/) or similar support implemented. There are database differences between revisions. At worst case, backup old database, do "python manage.py syncdb" and "restore by hand".
 
 You like these few lines of code, you find it useful or want new feature? 
 ----------------------------------------
