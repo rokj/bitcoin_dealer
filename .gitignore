@@ -3,3 +3,4 @@ settings.py
 settings-development.py
 *.pyc
 *.swp
+screenshots/*
