@@ -86,7 +86,7 @@ class Trade(SkeletonU):
     status = models.CharField(_('Status of trade'), help_text=_('Status of trade (you do not have to set/change this, unless you know what are you doing).'), max_length=30, null=False, blank=False, choices=TRADE_STATUS, default='waiting')
     active = models.BooleanField(_('Active or not'), help_text=_('active == TRUE, not active == FALSE'), default=False, null=False, blank=False)
     completed = models.BooleanField(_('Completed on exchange'), help_text=_('This is true if trade was fully executed/completed or not on exchange'), default=False, null=False, blank=False)
-    exchange_oid = models.CharField(_('Exchanges order ID'), help_text=_('Some exchanges return id of a trade (we have it in format of http://en.wikipedia.org/wiki/UUID for MtGox).'), max_length=36, null=True, blank=True, db_index=True) 
+    exchange_oid = models.CharField(_('Exchanges order ID'), help_text=_('Some exchanges return id of a trade (MtGox has following format http://en.wikipedia.org/wiki/UUID).'), max_length=36, null=True, blank=True, db_index=True) 
     related = models.ForeignKey('self', help_text=_('Only if related order was successfully executed, only then this order will be executed also.'), null=True, blank=True)
     exchange = models.ForeignKey(Exchange, related_name='(app_label)s_%(class)s_exchange', null=False, blank=False) 
     currency = models.ForeignKey(Currency, related_name='(app_label)s_%(class)s_currency', null=False, blank=False)
