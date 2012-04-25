@@ -34,9 +34,9 @@ Screenshots
 -----------
 
 Click to view.
-[![add trade](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-1.png)](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-1.png)
-[![edit trade](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-2.png)](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trade-2.png)
-[![trades](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trades.png)](https://github.com/rokj/bitcoin_dealer/blob/master/screenshots/trades.png)
+[![add trade](https://github.com/rokj/bitcoin_dealer/raw/master/screenshots/trade-1.png)](https://github.com/rokj/bitcoin_dealer/raw/master/screenshots/trade-1.png)
+[![edit trade](https://github.com/rokj/bitcoin_dealer/raw/master/screenshots/trade-2.png)](https://github.com/rokj/bitcoin_dealer/raw/master/screenshots/trade-2.png)
+[![trades](https://github.com/rokj/bitcoin_dealer/raw/master/screenshots/trades.png)](https://github.com/rokj/bitcoin_dealer/raw/master/screenshots/trades.png)
 
 Troubleshooting
 ---------------
