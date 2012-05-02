@@ -29,7 +29,7 @@ Installation
 * Start webserver in bitcoin_dealer's folder like:
   python manage.py runserver 8000
 * Goto http://127.0.0.1:8000/admin/ and trade.
-* (optional) you can set crontab script for checking if bitcoin_dealer is running. If not, you get an email. See bin/bitcoin_dealer.sh. You can add something like */15 * * * * /programs/bitcoin_dealer/bin/bitcoin_dealer.sh to crontab.
+* (optional) you can set crontab script for checking if bitcoin_dealer is running. If not, you get an email. See bin/bitcoin_dealer.sh. You can add something like */15 * * * * /programs/bitcoin_dealer/bin/bitcoin_dealer.sh to crontab for 15 minutes checking.
 
 Screenshots
 -----------
