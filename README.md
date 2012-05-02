@@ -44,6 +44,7 @@ Troubleshooting
 If paths for running script cannot be found and you get errors, set following variables:
 
 export DJANGO_SETTINGS_MODULE=bitcoin_dealer.settings
+
 export PYTHONPATH=$PYTHONPATH:/your_path_to_one_path_less_than_bitcoin_dealer/ 
 
 bitcoin_dealer is the name of the folder you have cloned this project. If you have bitcoin_dealer in **/programs/bitcoin_dealer/** then you should export **PYTHONPATH=$PYTHONPATH:/programs/**.
