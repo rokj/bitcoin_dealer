@@ -53,7 +53,7 @@ class Currency(SkeletonU):
 class Exchange(SkeletonU):
     name = models.CharField(_('Exchange name'), max_length=40, null=False, blank=False, unique=True, db_index=True)
     description = models.TextField(_('Description'), null=True, blank=True)
-    url = models.URLField(_('URL of change'), max_length=255, blank=True, null=True, verify_exists=False)
+    url = models.URLField(_('URL of change'), max_length=255, blank=True, null=True)
     currencies = models.ManyToManyField(Currency, null=True, blank=True) # for future use
     active = models.BooleanField(_('Active or not'), help_text=_('If active is set to false on exchange, then all trades for this exchange will be deactivated and cancelled (if exchange does support this action).'), default=False, null=False, blank=False)
 
