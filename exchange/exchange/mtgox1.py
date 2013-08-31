@@ -12,7 +12,7 @@ class MtGox1(ExchangeAbstract):
     _last_price = {}
     _order = None
 
-    ticker_url = { "method": "GET", "url": "https://data.mtgox.com/api/1/BTCUSD/public/ticker" }
+    ticker_url = { "method": "GET", "url": "http://data.mtgox.com/api/1/BTCUSD/ticker_fast" }
     buy_url = { "method": "POST", "url": "https://data.mtgox.com/api/1/BTCUSD/private/order/add" }
     sell_url = { "method": "POST", "url": "https://data.mtgox.com/api/1/BTCUSD/private/order/add" }
     order_url = { "method": "POST", "url": "https://data.mtgox.com/api/1/generic/private/order/result" }
