@@ -1,32 +1,42 @@
 import sys, os, time, datetime
 import urllib2
 from django.core.management import setup_environ
-from django import db
 from decimal import *
 
 sys.path.append(os.path.abspath('..'))
 sys.path.append(os.path.abspath('../bitcoin_dealer'))
 
-from bitcoin_dealer.exchange.exchange.mtgox1 import MtGox1
-from bitcoin_dealer.exchange.models import Trade, TradeLog, Exchange
-import bitcoin_dealer.exchange.exchange_abstract
-import bitcoin_dealer.settings as settings
+
+from django import db
+
+from exchange.exchange.mtgox1 import MtGox1
+from exchange.exchange.bitstamp1 import BitStamp1
+from exchange.exchange.btce1 import BtcE1
+from exchange.models import Trade, TradeLog, Exchange
+import exchange.exchange_abstract
+import settings as settings
 
 def console_log(message):
     now = datetime.datetime.now()
     print "%s - %s" % (now.strftime("%Y-%m-%d %H:%M:%S"), message)
 
 def trade(trades):
+    
+    #last prices for every exchange
+    last_prices_exchanges = {}
+    
     for trade in trades:
-        if trade.exchange.name in exchanges:
+        if trade.exchange.name in exchanges and trade.exchange.name not in last_prices_exchanges:
             last_price = exchanges[trade.exchange.name].get_last_price(trade.currency.abbreviation)
+            last_prices_exchanges[trade.exchange.name] = last_price
+        elif trade.exchange.name in exchanges:
+            last_price = last_prices_exchanges[trade.exchange.name]
         else:
             continue
+        
 
         if last_price is None: continue
-
-        last_price = Decimal(last_price)
-
+        print last_prices_exchanges
         try:
             watch_price = Decimal(trade.watch_price)
             # we are BUYING, when last price is higher or equal to watch price (lp_higher == True) and there is no related "sell" order
@@ -49,11 +59,13 @@ def trade(trades):
             # we are BUYING, when last price is lower or equal to watch price (lp_higher == False) and there is no related "sell" order
             elif trade.active == True and trade.lp_higher == False and trade.buy_or_sell == True and trade.related is None:
                 if last_price <= watch_price:
+                    
                     response = exchanges[trade.exchange.name].buy(trade.price, trade.amount, trade.currency.abbreviation)
-
+                    print response
                     if response and response is not None:
                         trade.active = False
                         trade.status = "buying"
+                        print response
                         trade.exchange_oid = response
                         trade.save()
 
@@ -119,9 +131,11 @@ def trade(trades):
             # we are SELLING, when last price is lower or equal to watch price (lp_higher == False) and there is no related "buy" order
             elif trade.active == True and trade.lp_higher == False and trade.buy_or_sell == False and trade.related is None:
                 if last_price <= watch_price:
+                    
                     response = exchanges[trade.exchange.name].sell(trade.price, trade.amount, trade.currency.abbreviation)
-
+                    print response
                     if response and response is not None:
+                        
                         trade.active = False
                         trade.status = "selling"
                         trade.exchange_oid = response
@@ -168,6 +182,26 @@ def trade(trades):
 
                             if settings.bd_debug == True:
                                 console_log("selling, when last price (%s) is lower or equal to watch price (%s) and related buy was bought (selling at price: %s, amount: %s, currency: %s, related: %s)" % (last_price, trade.watch_price, trade.price, trade.amount, trade.currency.abbreviation, trade.related.pk))
+            
+            elif trade.active == True and trade.lp_higher == False and trade.buy_or_sell == False and trade.related is not None:
+                if trade.related.status == "bought" and trade.status == "waiting":
+                    if last_price <= watch_price:
+                        response = exchanges[trade.exchange.name].sell(trade.price, trade.amount, trade.currency.abbreviation)
+
+                        if response and response is not None:
+                            trade.active = False
+                            trade.status = "selling"
+                            trade.exchange_oid = response
+                            trade.save()
+
+                            trade_log = TradeLog(created_by=trade.user, trade=trade, log="selling", log_desc="Selling %s (related %s bought)." % (trade.pk, trade.related.pk))
+                            trade_log.save()
+
+                            if settings.bd_debug == True:
+                                console_log("selling, when last price (%s) is lower or equal to watch price (%s) and related buy was bought (selling at price: %s, amount: %s, currency: %s, related: %s)" % (last_price, trade.watch_price, trade.price, trade.amount, trade.currency.abbreviation, trade.related.pk))
+        
+        
+        
         except:
             raise
 """

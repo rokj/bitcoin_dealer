@@ -7,5 +7,5 @@ SUBJECT="Bitcoin dealer down!"
 EMAIL="tomaz.znideric@gmail.com"
 if ! ps ax | grep -v grep | grep "scripts/dealing.py" > /dev/null
 then
-    echo "bitcoin_dealer is not running?"
+    echo "bitcoin_dealer is not running?" | mail -s "$SUBJECT" $EMAIL
 fi

@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
-import bitcoin_dealer.settings as settings
+#import settings as settings
 
 class Order:
     """
