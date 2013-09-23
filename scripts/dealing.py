@@ -36,7 +36,6 @@ def trade(trades):
         
 
         if last_price is None: continue
-        print last_prices_exchanges
         try:
             watch_price = Decimal(trade.watch_price)
             # we are BUYING, when last price is higher or equal to watch price (lp_higher == True) and there is no related "sell" order
@@ -61,11 +60,9 @@ def trade(trades):
                 if last_price <= watch_price:
                     
                     response = exchanges[trade.exchange.name].buy(trade.price, trade.amount, trade.currency.abbreviation)
-                    print response
                     if response and response is not None:
                         trade.active = False
                         trade.status = "buying"
-                        print response
                         trade.exchange_oid = response
                         trade.save()
 
@@ -133,7 +130,6 @@ def trade(trades):
                 if last_price <= watch_price:
                     
                     response = exchanges[trade.exchange.name].sell(trade.price, trade.amount, trade.currency.abbreviation)
-                    print response
                     if response and response is not None:
                         
                         trade.active = False
