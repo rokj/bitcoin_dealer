@@ -1,4 +1,5 @@
 # Django settings for bitcoin_dealer project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -52,6 +53,11 @@ MEDIA_ROOT = ''
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = ''
 
+if DEBUG == True:
+    MEDIA_URL = 'http://127.0.0.1:8000/'
+else:
+    MEDIA_URL = 'http://127.0.0.1:8000/'
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
@@ -60,7 +66,11 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+if DEBUG == True:
+    # STATIC_URL = 'http://127.0.0.1:8000/static/'
+    STATIC_URL = '/static/'
+else:
+    STATIC_URL = 'http://127.0.0.1:8000/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -106,6 +116,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+
+    os.path.join(os.path.dirname(__file__), 'templates').replace('\\', '/'),
 )
 
 INSTALLED_APPS = (
@@ -163,8 +175,9 @@ EXCHANGES = {
     'bitstamp':{
         'classname': 'BitStamp1',
         # change specific (put your user ID and Password here)
-        'user': '',
-        'password': ''
+        'key': '',
+        'secret': '',
+        'client_id': '',
     }
 }
 """

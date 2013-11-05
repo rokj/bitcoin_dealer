@@ -11,14 +11,12 @@ from django import db
 
 from exchange.exchange.mtgox1 import MtGox1
 from exchange.exchange.bitstamp1 import BitStamp1
-from exchange.exchange.btce1 import BtcE1
+# from exchange.exchange.btce1 import BtcE1
 from exchange.models import Trade, TradeLog, Exchange
+from common.functions import console_log
 import exchange.exchange_abstract
 import settings as settings
 
-def console_log(message):
-    now = datetime.datetime.now()
-    print "%s - %s" % (now.strftime("%Y-%m-%d %H:%M:%S"), message)
 
 def trade(trades):
     
@@ -33,7 +31,6 @@ def trade(trades):
             last_price = last_prices_exchanges[trade.exchange.name]
         else:
             continue
-        
 
         if last_price is None: continue
         try:

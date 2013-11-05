@@ -1,6 +1,7 @@
 import sys, os, re, urllib, urllib3, httplib, time, json, hmac, hashlib, base64
 
 from decimal import Decimal
+from common.functions import console_log
 from exchange.exchange_abstract import ExchangeAbstract, Order
 
 class BitStamp1(ExchangeAbstract):
@@ -18,9 +19,9 @@ class BitStamp1(ExchangeAbstract):
     #order_url = { "method": "POST", "url": "https://data.mtgox.com/api/1/generic/private/order/result" }
     #open_orders_url = { "method": "POST", "url": "https://data.mtgox.com/api/1/generic/private/orders" }
 
-    user = None
-    password = None
-    classname = None
+    key = None
+    secret = None
+    client_id = None
 
     @property
     def order(self):
@@ -44,14 +45,17 @@ class BitStamp1(ExchangeAbstract):
         return int(time.time() * 1000000)
 
     def _send_request(self, url, params, extra_headers=None):
-        headers = { 'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)' }
+        headers = {
+            'Content-type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
 
         if extra_headers is not None:
             for k, v in extra_headers.iteritems():
                 headers[k] = v
         
         http_pool = urllib3.connection_from_url(url['url'])
-        response = http_pool.urlopen(url['method'], url['url'], body=urllib.urlencode(params))#, headers = headers)
+        response = http_pool.urlopen(url['method'], url['url'], body=urllib.urlencode(params))  #, headers = headers)
 
         if response.status == 200:
             return json.loads(response.data)
@@ -93,8 +97,13 @@ class BitStamp1(ExchangeAbstract):
 
         Returns order ID if order was placed successfully.
         """
-        if not self.user or self.user is None: return None
-        if not self.password or self.password is None: return None
+        if not self.key or self.key is None:
+            console_log("bitstamp: key not set; check settings.py")
+            return None
+
+        if not self.secret or self.secret is None:
+            console_log("bitstamp: secret not set; check settings.py")
+            return None
 
         price = self._to_int_price(price, currency)
         amount = self._to_int_amount(amount)
@@ -104,16 +113,25 @@ class BitStamp1(ExchangeAbstract):
 
             return None
 
-        if not amount or amount is None: return None
-
+        if not amount or amount is None:
+            return None
 
         self.buy_url["url"] = self._change_currency_url(self.buy_url["url"], currency)
-        params = {'user': self.user, 'password': self.password, "amount": str(amount), "price": str(price)}
-        # headers = {  }
+
+        nonce = str(self._create_nonce())
+        message = nonce + self.client_id + self.key
+        signature = hmac.new(self.secret, msg=message, digestmod=hashlib.sha256).hexdigest().upper()
+
+        params = {'key': self.key, 'signature': signature, 'nonce': nonce, "amount": str(amount),
+                  "price": str(price)}
+
         response = self._send_request(self.buy_url, params)
-        print response
+
         if response and u"id" in response:
             return response[u"id"]
+
+        if response and u"error" in response:
+            console_log("bitstamp: error returned from server with message: %s" % response[u"error"])
 
         return None
 
@@ -122,8 +140,14 @@ class BitStamp1(ExchangeAbstract):
         ask == sell
         """
         
-        if not self.user or self.user is None: return None
-        if not self.password or self.password is None: return None
+        if not self.key or self.key is None:
+            console_log("bitstamp: key not set; check settings.py")
+            return None
+
+        if not self.secret or self.secret is None:
+            console_log("bitstamp: secret not set; check settings.py")
+            return None
+
         price = self._to_int_price(price, currency)
         amount = self._to_int_amount(amount)
         
@@ -133,15 +157,23 @@ class BitStamp1(ExchangeAbstract):
             return None
 
         if not amount or amount is None: return None
+
         self.sell_url["url"] = self._change_currency_url(self.sell_url["url"], currency)
         
-        
-        params = {'user': self.user, 'password': self.password, "amount": str(amount), "price": str(price)}
+        nonce = str(self._create_nonce())
+        message = nonce + self.client_id + self.key
+        signature = hmac.new(self.secret, msg=message, digestmod=hashlib.sha256).hexdigest().upper()
+
+        params = {'key': self.key, 'signature': signature, 'nonce': nonce, "amount": str(amount),
+                  "price": str(price)}
        
         response = self._send_request(self.sell_url, params)
         
         if response and u"id" in response:
             return response[u"id"]
+
+        if response and u"error" in response:
+            console_log("bitstamp: error returned from server with message: %s" % response[u"error"])
 
         return None
     

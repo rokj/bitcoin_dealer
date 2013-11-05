@@ -1,6 +1,7 @@
 import sys, os, re, urllib, urllib3, httplib, time, json, hmac, hashlib, base64
 
 from decimal import Decimal
+from common.functions import console_log
 from exchange.exchange_abstract import ExchangeAbstract, Order
 
 class MtGox1(ExchangeAbstract):
@@ -81,8 +82,13 @@ class MtGox1(ExchangeAbstract):
         Method gets particular order.
         """
 
-        if not self.key or self.key is None: return
-        if not self.secret or self.secret is None: return
+        if not self.key or self.key is None:
+            console_log("mtgox: key not set; check settings.py")
+            return
+
+        if not self.secret or self.secret is None:
+            console_log("mtgox: secret not set; check settings.py")
+            return
 
         order_type = ""
         if trade.buy_or_sell == True:
@@ -119,8 +125,13 @@ class MtGox1(ExchangeAbstract):
         Method gets open orders.
         """
 
-        if not self.key or self.key is None: return
-        if not self.secret or self.secret is None: return
+        if not self.key or self.key is None:
+            console_log("mtgox: key not set; check settings.py")
+            return
+
+        if not self.secret or self.secret is None:
+            console_log("mtgox: secret not set; check settings.py")
+            return
 
         params = [ (u"nonce", self._create_nonce()) ]
         headers = { 'Rest-Key': self.key, 'Rest-Sign': base64.b64encode(str(hmac.new(base64.b64decode(self.secret), urllib.urlencode(params), hashlib.sha512).digest())) }
@@ -151,8 +162,14 @@ class MtGox1(ExchangeAbstract):
         For future use.
         """
 
-        if not self.key or self.key is None: return
-        if not self.secret or self.secret is None: return
+        if not self.key or self.key is None:
+            console_log("mtgox: key not set; check settings.py")
+            return
+
+        if not self.secret or self.secret is None:
+            console_log("mtgox: secret not set; check settings.py")
+            return
+
 
         params = [ (u"nonce", self._create_nonce()) ]
         headers = { 'Rest-Key': self.key, 'Rest-Sign': base64.b64encode(str(hmac.new(base64.b64decode(self.secret), urllib.urlencode(params), hashlib.sha512).digest())) }
@@ -171,14 +188,20 @@ class MtGox1(ExchangeAbstract):
 
         Returns order ID if order was placed successfully.
         """
-        if not self.key or self.key is None: return None
-        if not self.secret or self.secret is None: return None
+        if not self.key or self.key is None:
+            console_log("mtgox: key not set; check settings.py")
+            return None
+
+        if not self.secret or self.secret is None:
+            console_log("mtgox: secret not set; check settings.py")
+            return None
+
 
         price = self._to_int_price(price, currency)
         amount = self._to_int_amount(amount)
 
         if not price or price is None:
-            console_log("there is no conversion forumla for currency %s" % (currency))
+            console_log("mtgox: there is no conversion forumla for currency %s" % (currency))
 
             return None
 
@@ -201,8 +224,15 @@ class MtGox1(ExchangeAbstract):
         """
         ask == sell
         """
-        if not self.key or self.key is None: return
-        if not self.secret or self.secret is None: return
+
+        if not self.key or self.key is None:
+            console_log("mtgox: key not set; check settings.py")
+            return
+
+        if not self.secret or self.secret is None:
+            console_log("mtgox: secret not set; check settings.py")
+            return
+
 
         price = self._to_int_price(price, currency)
         amount = self._to_int_amount(amount)
