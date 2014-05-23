@@ -71,4 +71,4 @@ See AUTHORS.
 
 Developers
 ----------
-With little effort, support for other exchanges can be added also. Database models and program itself is designed with that in mind. However, script which is responsible for trading (scripts/dealing.py), supports Bitstamp, Mtgox. But until good fairy comes and saves Mtgox and Kerpeles, Mtgox exchang is disabled by default.
+With little effort, support for other exchanges can be added also. Database models and program itself is designed with that in mind. However, script which is responsible for trading (scripts/dealing.py), supports Bitstamp, Mtgox. But until good fairy comes and saves Mtgox and Kerpeles, Mtgox exchange is disabled by default.
