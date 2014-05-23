@@ -1,6 +1,5 @@
 import sys, os, time, datetime
 import urllib2
-from django.core.management import setup_environ
 from decimal import *
 
 sys.path.append(os.path.abspath('..'))
@@ -245,6 +244,8 @@ def check_status(trades, orders):
                 if (settings.bd_debug == True):
 					console_log("bought %s bitcoins at %s %s" % (trade.amount, trade.price, trade.currency.abbreviation))
 
+        """
+        Not working properly now.
         if trade.exchange_oid is not None and trade.completed == False and (trade.status == "buying" or trade.status == "bought" or trade.status == "selling" or trade.status == "sold"):
             if (settings.bd_debug == True):
                 if trade.status == "buying" or trade.status == "selling":
@@ -264,8 +265,7 @@ def check_status(trades, orders):
                         console_log("trade %s at price %s, amount %s and currency %s completed" % (trade.pk, trade.price, trade.amount, trade.currency.abbreviation))
                     trade.completed = True
                 trade.save()
-            """
-            Not working properly now.
+
 
             elif isinstance(exchanges[trade.exchange.name].order, dict):
                 if "error" in exchanges[trade.exchange.name].order:
@@ -277,7 +277,7 @@ def check_status(trades, orders):
 
                     if (settings.bd_debug == True):
         	            console_log("trade %s at price %s, amount %s and currency %s completed with error on getting transactions from exchange. Message was %s." % (trade.pk, trade.price, trade.amount, trade.currency.abbreviation, exchanges[trade.exchange.name].order["error"]))
-            """
+        """
 
 while True:
     time.sleep(settings.check_interval)

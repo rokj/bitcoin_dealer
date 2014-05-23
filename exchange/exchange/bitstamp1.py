@@ -1,8 +1,9 @@
-import sys, os, re, urllib, urllib3, httplib, time, json, hmac, hashlib, base64
+import re, time, hmac, hashlib
 
 from decimal import Decimal
+import requests
 from common.functions import console_log
-from exchange.exchange_abstract import ExchangeAbstract, Order
+from exchange.exchange_abstract import ExchangeAbstract
 
 class BitStamp1(ExchangeAbstract):
     """
@@ -53,12 +54,14 @@ class BitStamp1(ExchangeAbstract):
         if extra_headers is not None:
             for k, v in extra_headers.iteritems():
                 headers[k] = v
-        
-        http_pool = urllib3.connection_from_url(url['url'])
-        response = http_pool.urlopen(url['method'], url['url'], body=urllib.urlencode(params))  #, headers = headers)
 
-        if response.status == 200:
-            return json.loads(response.data)
+        if url["method"] == "GET":
+            response = requests.get(url['url'], params=params, headers=headers)
+        elif url["method"] == "POST":
+            response = requests.post(url['url'], data=params, headers=headers)
+
+        if response and response.status_code == requests.codes.ok:
+            return response.json()
 
         return None
 

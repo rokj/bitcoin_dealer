@@ -1,4 +1,5 @@
 # Django settings for bitcoin_dealer project.
+# -*- coding: utf-8 -*-
 import os
 
 DEBUG = True
@@ -14,7 +15,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'bitcoin_dealer',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
+        'USER': 'bitcoin',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
@@ -75,13 +76,14 @@ else:
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = ''
 
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    # Don't forget to use absolute paths, not relative paths.    
+    '',
 )
 
 # List of finder classes that know how to find static files in
@@ -170,7 +172,7 @@ EXCHANGES = {
         'classname': 'MtGox1', # DO NOT CHANGE THIS
         # exchange specific (you can set everything below to your needs)
         'key': '',
-        'secret': ''
+        'secret': '',
     },
     'bitstamp':{
         'classname': 'BitStamp1',
@@ -180,14 +182,6 @@ EXCHANGES = {
         'client_id': '',
     }
 }
-"""
-'btce':{
-    'classname': 'BtcE1',
-    'key': '',
-    'secret': ''   
-}
-"""
-
 
 check_interval = 7
 bd_debug = True
