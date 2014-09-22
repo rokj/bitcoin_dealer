@@ -9,7 +9,7 @@ Program is most useful for those who do not have time to watch price of bitcoin 
 
 Installation
 ------------
-* Register on Bitstamp - https://www.bitstamp.com/
+* Register on Bitstamp - https://www.bitstamp.net/
 * Install Django - https://www.djangoproject.com/
 * Run: git clone git@github.com:rokj/bitcoin_dealer.git
 * Install and configure database you will use.
